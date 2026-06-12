@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Brewbook — Craft Your Perfect Cup</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/fraunces@latest/latin-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/fraunces@latest/latin-600-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/latin-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/latin-500-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/latin-600-normal.css">
+<style>
+  :root {
+    --bg: #f5efe6;
+    --bg-grad-1: rgba(201,136,47,0.08);
+    --bg-grad-2: rgba(107,68,35,0.06);
+    --cream-dark: #ebe2d3;
+    --espresso: #2a1810;
+    --coffee: #6b4423;
+    --coffee-muted: #8b6f55;
+    --amber: #c9882f;
+    --rust: #8b4513;
+    --card-bg: rgba(255, 253, 248, 0.7);
+    --card-border: rgba(107, 68, 35, 0.12);
+    --input-bg: #fdfaf4;
+    --input-border: rgba(107, 68, 35, 0.18);
+    --stat-bg-1: rgba(201,136,47,0.08);
+    --stat-bg-2: rgba(107,68,35,0.04);
+    --stat-border: rgba(107,68,35,0.1);
+    --tag-bg: rgba(107,68,35,0.1);
+    --chip-bg: rgba(201, 136, 47, 0.12);
+    --chip-border: rgba(201, 136, 47, 0.25);
+    --grinder-bg: rgba(107,68,35,0.06);
+    --grinder-border: rgba(107,68,35,0.15);
+  }
+  .dark {
+    --bg: #16100a;
+    --bg-grad-1: rgba(201,136,47,0.10);
+    --bg-grad-2: rgba(107,68,35,0.12);
+    --cream-dark: #2a1d13;
+    --espresso: #f5efe6;
+    --coffee: #d4b896;
+    --coffee-muted: #a8927a;
+    --amber: #e0a854;
+    --rust: #c9882f;
+    --card-bg: rgba(34, 24, 16, 0.7);
+    --card-border: rgba(201, 136, 47, 0.15);
+    --input-bg: #1f150d;
+    --input-border: rgba(201, 136, 47, 0.2);
+    --stat-bg-1: rgba(201,136,47,0.12);
+    --stat-bg-2: rgba(107,68,35,0.08);
+    --stat-border: rgba(201,136,47,0.18);
+    --tag-bg: rgba(201,136,47,0.15);
+    --chip-bg: rgba(201, 136, 47, 0.18);
+    --chip-border: rgba(201, 136, 47, 0.35);
+    --grinder-bg: rgba(201,136,47,0.08);
+    --grinder-border: rgba(201,136,47,0.22);
+  }
+  * { font-family: 'Inter', sans-serif; }
+  h1, h2, h3, .serif { font-family: 'Fraunces', serif; }
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(at 20% 10%, var(--bg-grad-1) 0, transparent 50%),
+      radial-gradient(at 80% 80%, var(--bg-grad-2) 0, transparent 50%);
+    min-height: 100vh;
+    color: var(--espresso);
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.09 0 0 0 0 0.04 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .dark .grain { opacity: 0.25; }
+  .card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 4px 30px rgba(42, 24, 16, 0.06);
+    transition: background-color 0.4s ease, border-color 0.4s ease;
+  }
+  .dark .card { box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4); }
+  .input-field {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: var(--input-bg);
+    border: 1.5px solid var(--input-border);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    color: var(--espresso);
+    transition: all 0.2s ease;
+    outline: none;
+  }
+  .dark .input-field { color: #f5efe6; color-scheme: dark; }
+  .input-field:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px rgba(201, 136, 47, 0.15);
+  }
+  .input-field::placeholder { color: var(--coffee-muted); }
+  .btn-primary {
+    background: linear-gradient(135deg, #2a1810 0%, #4a2c1a 100%);
+    color: #f5efe6;
+    padding: 1rem 2rem;
+    border-radius: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(42, 24, 16, 0.25);
+    flex: 1;
+    min-width: 0;
+  }
+  .dark .btn-primary {
+    background: linear-gradient(135deg, #c9882f 0%, #a66d1f 100%);
+    color: #16100a;
+    box-shadow: 0 4px 20px rgba(201, 136, 47, 0.35);
+  }
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(42, 24, 16, 0.35);
+  }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* Reset / clear button */
+  .btn-ghost {
+    background: transparent;
+    color: var(--coffee);
+    padding: 1rem 1.25rem;
+    border-radius: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border: 1.5px solid var(--card-border);
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .btn-ghost:hover {
+    background: var(--chip-bg);
+    border-color: var(--chip-border);
+    color: var(--rust);
+    transform: translateY(-1px);
+  }
+  .btn-ghost:active { transform: translateY(0); }
+  .btn-ghost svg {
+    transition: transform 0.4s ease;
+  }
+  .btn-ghost:hover svg {
+    transform: rotate(-90deg);
+  }
+  .btn-ghost.resetting svg {
+    animation: spinReset 0.6s ease;
+  }
+  @keyframes spinReset {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(-360deg); }
+  }
+  .btn-ghost.flash-ok {
+    background: rgba(34,197,94,0.12);
+    border-color: rgba(34,197,94,0.4);
+    color: #16a34a;
+  }
+  .dark .btn-ghost.flash-ok {
+    background: rgba(74,222,128,0.15);
+    border-color: rgba(74,222,128,0.35);
+    color: #4ade80;
+  }
+
+  .method-chip {
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: var(--chip-bg);
+    color: var(--rust);
+    border: 1px solid var(--chip-border);
+  }
+  .stat-box {
+    background: linear-gradient(135deg, var(--stat-bg-1), var(--stat-bg-2));
+    border: 1px solid var(--stat-border);
+    border-radius: 16px;
+    padding: 1.25rem;
+  }
+  .step-num {
+    width: 28px; height: 28px;
+    background: var(--espresso);
+    color: var(--bg);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .dark .step-num { background: #c9882f; color: #16100a; }
+  .fade-in { animation: fadeIn 0.6s ease-out; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .brew-item { transition: all 0.25s ease; cursor: pointer; position: relative; }
+  .brew-item:hover { transform: translateX(4px); background: rgba(201, 136, 47, 0.06); }
+  .dark .brew-item:hover { background: rgba(201, 136, 47, 0.08); }
+  .hero-img { border-radius: 20px; box-shadow: 0 20px 60px rgba(42, 24, 16, 0.25); }
+  select.input-field {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b4423' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+  .dark select.input-field {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23d4b896' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  }
+  .loader {
+    width: 20px; height: 20px;
+    border: 2.5px solid rgba(245,239,230,0.3);
+    border-top-color: #f5efe6;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: var(--tag-bg);
+    color: var(--coffee);
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    margin-right: 0.35rem;
+  }
+  .theme-toggle {
+    position: relative;
+    width: 56px; height: 30px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #c9882f, #8b4513);
+    cursor: pointer;
+    transition: background 0.4s ease;
+    border: none;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .dark .theme-toggle {
+    background: linear-gradient(135deg, #2a1d13, #4a2c1a);
+    border: 1px solid rgba(201,136,47,0.3);
+  }
+  .theme-toggle .toggle-knob {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #fdfaf4;
+    transition: transform 0.4s cubic-bezier(0.68,-0.55,0.27,1.55);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .dark .theme-toggle .toggle-knob { transform: translateX(26px); background: #e0a854; }
+  .grinder-card {
+    background: var(--grinder-bg);
+    border: 1px solid var(--grinder-border);
+    border-radius: 14px;
+    padding: 1.1rem;
+  }
+  .grinder-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.7rem;
+    background: var(--amber);
+    color: #16100a;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .dark .grinder-pill { background: #e0a854; color: #16100a; }
+  .setting-display {
+    background: var(--espresso);
+    color: var(--bg);
+    padding: 0.3rem 0.7rem;
+    border-radius: 8px;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+  }
+  .dark .setting-display { background: #e0a854; color: #16100a; }
+  .icon-sun, .icon-moon { position: absolute; }
+  .icon-sun { color: #c9882f; opacity: 1; }
+  .icon-moon { color: #2a1d13; opacity: 0; }
+  .dark .icon-sun { opacity: 0; }
+  .dark .icon-moon { opacity: 1; }
+  .date-wrapper { position: relative; }
+  .date-wrapper .date-icon {
+    position: absolute; left: 1rem; top: 50%;
+    transform: translateY(-50%); pointer-events: none;
+    color: var(--coffee-muted);
+  }
+  .date-wrapper input[type="date"] { padding-left: 2.6rem; }
+  .freshness-badge {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.3rem 0.7rem; border-radius: 999px;
+    font-size: 0.72rem; font-weight: 600;
+  }
+  .freshness-fresh { background: rgba(34, 197, 94, 0.15); color: #16a34a; border: 1px solid rgba(34,197,94,0.25); }
+  .freshness-peak { background: rgba(201,136,47,0.15); color: #c9882f; border: 1px solid rgba(201,136,47,0.3); }
+  .freshness-stale { background: rgba(220, 38, 38, 0.12); color: #dc2626; border: 1px solid rgba(220,38,38,0.25); }
+  .dark .freshness-fresh { background: rgba(34,197,94,0.18); color: #4ade80; }
+  .dark .freshness-peak { background: rgba(201,136,47,0.2); color: #e0a854; }
+  .dark .freshness-stale { background: rgba(220,38,38,0.18); color: #f87171; }
+  .rec-hint {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.25rem 0.6rem;
+    background: rgba(34,197,94,0.1); color: #16a34a;
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 999px;
+    font-size: 0.7rem; font-weight: 600;
+    margin-top: 0.5rem;
+  }
+  .dark .rec-hint {
+    background: rgba(74,222,128,0.12); color: #4ade80;
+    border-color: rgba(74,222,128,0.25);
+  }
+  .override-note {
+    background: rgba(201,136,47,0.1);
+    border: 1px dashed rgba(201,136,47,0.4);
+    color: var(--coffee);
+    padding: 0.6rem 0.9rem;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .star-rating { display: inline-flex; gap: 0.15rem; cursor: pointer; }
+  .star-rating.readonly { cursor: default; }
+  .star-rating svg {
+    width: 22px; height: 22px;
+    transition: transform 0.15s ease, fill 0.2s ease;
+    fill: var(--cream-dark); stroke: var(--coffee-muted); stroke-width: 1;
+  }
+  .star-rating:not(.readonly) svg:hover { transform: scale(1.15); }
+  .star-rating svg.active { fill: var(--amber); stroke: var(--amber); }
+  .star-rating.readonly svg { width: 14px; height: 14px; }
+  .star-rating.readonly svg.active { fill: #c9882f; stroke: #c9882f; }
+  .notes-btn {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.35rem 0.7rem;
+    background: transparent;
+    border: 1px solid var(--chip-border);
+    color: var(--coffee);
+    border-radius: 8px;
+    font-size: 0.72rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s ease;
+  }
+  .notes-btn:hover { background: var(--chip-bg); transform: translateY(-1px); }
+  .notes-btn.has-notes { background: var(--chip-bg); border-color: var(--amber); color: var(--rust); }
+  .popover-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(42, 24, 16, 0.25);
+    z-index: 50;
+    animation: fadeBackdrop 0.2s ease;
+  }
+  .dark .popover-backdrop { background: rgba(0, 0, 0, 0.5); }
+  @keyframes fadeBackdrop { from { opacity: 0; } to { opacity: 1; } }
+  .popover {
+    position: absolute;
+    width: 340px; max-width: calc(100vw - 32px);
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 1.1rem;
+    box-shadow: 0 20px 60px rgba(42, 24, 16, 0.25);
+    z-index: 60;
+    animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .dark .popover { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6); }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.92) translateY(-4px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .popover textarea {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1.5px solid var(--input-border);
+    border-radius: 10px;
+    padding: 0.65rem 0.85rem;
+    color: var(--espresso);
+    font-size: 0.85rem; line-height: 1.5;
+    resize: vertical; min-height: 90px;
+    outline: none; font-family: inherit;
+    transition: border-color 0.2s;
+  }
+  .dark .popover textarea { color: #f5efe6; }
+  .popover textarea:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px rgba(201, 136, 47, 0.15);
+  }
+  .popover textarea::placeholder { color: var(--coffee-muted); }
+  .notes-preview {
+    font-size: 0.72rem; color: var(--coffee-muted);
+    font-style: italic; margin-top: 0.25rem;
+    display: -webkit-box; -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .pop-close {
+    position: absolute; top: 0.5rem; right: 0.5rem;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: transparent; color: var(--coffee-muted);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .pop-close:hover { background: var(--tag-bg); color: var(--espresso); }
+  .btn-save {
+    width: 100%; padding: 0.55rem;
+    background: var(--espresso); color: var(--bg);
+    border-radius: 10px; font-size: 0.8rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .dark .btn-save { background: #c9882f; color: #16100a; }
+  .btn-save:hover { transform: translateY(-1px); }
+  .btn-clear-rating {
+    background: transparent; border: none;
+    color: var(--coffee-muted); font-size: 0.7rem;
+    cursor: pointer; padding: 0.2rem 0.4rem;
+    border-radius: 4px; text-decoration: underline;
+  }
+  .btn-clear-rating:hover { color: var(--rust); }
+  .spec-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem; margin-top: 0.75rem;
+  }
+  .spec-item {
+    background: var(--stat-bg-1);
+    border: 1px solid var(--stat-border);
+    border-radius: 8px; padding: 0.5rem 0.6rem;
+  }
+  .spec-item .spec-label {
+    font-size: 0.62rem; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--coffee-muted); font-weight: 600;
+  }
+  .spec-item .spec-value {
+    font-size: 0.78rem; color: var(--espresso);
+    font-weight: 600; margin-top: 0.15rem;
+  }
+  .bottom-card {
+    background: var(--stat-bg-1);
+    border: 1px solid var(--stat-border);
+    border-radius: 10px; padding: 0.75rem; margin-top: 0.75rem;
+  }
+  .bottom-card h5 {
+    font-size: 0.75rem; font-weight: 600;
+    color: var(--espresso); margin-bottom: 0.25rem;
+  }
+  .bottom-card p { font-size: 0.72rem; color: var(--coffee); line-height: 1.5; }
+  .bottom-recommended {
+    background: rgba(201,136,47,0.15);
+    border: 1.5px solid var(--amber);
+  }
+  .taste-hint {
+    margin-top: 0.6rem;
+    padding: 0.7rem 0.85rem;
+    background: linear-gradient(135deg, rgba(201,136,47,0.08), rgba(107,68,35,0.04));
+    border: 1px dashed var(--chip-border);
+    border-radius: 10px;
+    font-size: 0.78rem;
+    color: var(--coffee);
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .taste-hint.visible { display: block; }
+  .taste-hint .taste-label {
+    display: flex; align-items: center; gap: 0.35rem;
+    font-size: 0.68rem; text-transform: uppercase;
+    letter-spacing: 0.08em; font-weight: 700;
+    color: var(--coffee-muted); margin-bottom: 0.4rem;
+  }
+  .taste-hint .taste-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .taste-hint .taste-chip {
+    padding: 0.2rem 0.55rem;
+    background: var(--chip-bg);
+    color: var(--rust);
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    border: 1px solid var(--chip-border);
+  }
+  .taste-hint .taste-meta {
+    margin-top: 0.45rem;
+    font-size: 0.7rem;
+    color: var(--coffee-muted);
+    font-style: italic;
+  }
+  .taste-hint .taste-meta b { color: var(--coffee); font-style: normal; }
+  .tasting-card {
+    background: linear-gradient(135deg, rgba(201,136,47,0.12), rgba(107,68,35,0.06));
+    border: 1px solid var(--chip-border);
+    border-radius: 16px;
+    padding: 1.1rem;
+    margin-bottom: 1.25rem;
+  }
+  .tasting-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  .tasting-item {
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 0.65rem 0.7rem;
+  }
+  .tasting-item .t-icon { font-size: 1rem; line-height: 1; margin-bottom: 0.3rem; }
+  .tasting-item .t-label {
+    font-size: 0.62rem; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--coffee-muted);
+    font-weight: 600;
+  }
+  .tasting-item .t-value {
+    font-size: 0.82rem; color: var(--espresso);
+    font-weight: 600; margin-top: 0.2rem;
+    line-height: 1.35;
+  }
+  .flavor-wheel { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.75rem; }
+  .flavor-pill {
+    padding: 0.3rem 0.7rem;
+    background: var(--amber);
+    color: #16100a;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex; align-items: center; gap: 0.3rem;
+  }
+  .dark .flavor-pill { background: #e0a854; }
+  .tasting-note {
+    font-size: 0.78rem;
+    color: var(--coffee);
+    line-height: 1.55;
+    margin-top: 0.75rem;
+    padding: 0.7rem 0.85rem;
+    background: var(--input-bg);
+    border-left: 3px solid var(--amber);
+    border-radius: 6px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body class="relative">
+<div class="grain"></div>
+
+<div class="relative z-10 max-w-7xl mx-auto px-6 py-10">
+  <header class="flex items-center justify-between mb-12 gap-4">
+    <div class="flex items-center gap-3 min-w-0">
+      <div class="w-11 h-11 rounded-full bg-gradient-to-br from-[#2a1810] to-[#6b4423] flex items-center justify-center flex-shrink-0">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f5efe6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/>
+        </svg>
+      </div>
+      <div class="min-w-0">
+        <h1 class="text-2xl font-semibold leading-none" style="color: var(--espresso)">Brewbook</h1>
+        <p class="text-xs mt-1" style="color: var(--coffee-muted)">Craft your perfect cup</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="hidden md:flex items-center gap-2 text-sm" style="color: var(--coffee)">
+        <span class="w-2 h-2 rounded-full bg-[#c9882f] animate-pulse"></span>
+        <span id="todayDate"></span>
+      </div>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <div class="toggle-knob">
+          <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </div>
+      </button>
+    </div>
+  </header>
+
+  <section class="grid md:grid-cols-5 gap-8 items-center mb-14">
+    <div class="md:col-span-3">
+      <span class="method-chip mb-4 inline-block">Recipe Generator · v4.1</span>
+      <h2 class="text-5xl md:text-6xl font-semibold leading-[1.05] mb-5" style="color: var(--espresso)">
+        Tell me about your <em class="not-italic" style="color: var(--amber)">coffee</em>,<br/>I'll craft the brew.
+      </h2>
+      <p class="text-lg max-w-xl leading-relaxed" style="color: var(--coffee)">
+        Type your bean's name and our engine identifies its origin, variety, and typical flavor profile. Then pick your brewer or let us recommend, and get the exact grind setting, ratio, and water temperature.
+      </p>
+    </div>
+    <div class="md:col-span-2">
+      <img src="https://image.qwenlm.ai/public_source/21c672af-20aa-4182-a362-9ee5f723416c/19beead4d-078f-4ac2-abae-3110aec19a25.png" alt="Coffee setup" class="hero-img w-full aspect-[4/3] object-cover"/>
+    </div>
+  </section>
+
+  <div class="grid lg:grid-cols-2 gap-8 mb-14">
+    <div class="card rounded-3xl p-8">
+      <div class="flex items-center gap-2 mb-6">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-semibold" style="background: var(--espresso); color: var(--bg)">1</div>
+        <h3 class="text-xl font-semibold" style="color: var(--espresso)">Bean & gear details</h3>
+      </div>
+
+      <form id="brewForm" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold mb-2 uppercase tracking-wider" style="color: var(--coffee)">Coffee name</label>
+          <input type="text" id="coffeeName" class="input-field" placeholder="e.g. Ethiopia Yirgacheffe Konga, Gesha Village, Panama Geisha" required autocomplete="off"/>
+          <div id="tasteHint" class="taste-hint"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold mb-2 uppercase tracking-wider" style="color: var(--coffee)">Country</label>
+            <input type="text" id="country" class="input-field" placeholder="e.g. Ethiopia" required/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-2 uppercase tracking-wider" style="color: var(--coffee)">Process</label>
+            <select id="process" class="input-field" required>
+              <option value="">Select process</option>
+              <option value="washed">Washed</option>
+              <option value="natural">Natural</option>
+              <option value="honey">Honey</option>
+              <option value="anaerobic">Anaerobic</option>
+              <option value="carbonic">Carbonic Maceration</option>
+              <option value="co-ferment">Co-Ferment</option>
+              <option value="wet-hulled">Wet-Hulled</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold mb-2 uppercase tracking-wider" style="color: var(--coffee)">
+              Roast date
+              <span id="freshnessHint" class="freshness-badge ml-2 hidden"></span>
+            </label>
+            <div class="date-wrapper">
+              <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              <input type="date" id="roastDate" class="input-field" required/>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-2 uppercase tracking-wider" style="color: var(--coffee)">Altitude (m.a.s.l.)</label>
+            <input type="number" id="altitude" class="input-field" placeholder="e.g. 1800" min="0" max="3500" required/>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold mb-2 uppercase tracking-wider" style="color: var(--coffee)">Roast level</label>
+            <select id="roastLevel" class="input-field" required>
+              <option value="">Select roast level</option>
+              <option value="light">Light (Nordic)</option>
+              <option value="light-medium">Light-Medium</option>
+              <option value="medium">Medium</option>
+              <option value="medium-dark">Medium-Dark</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-2 uppercase tracking-wider" style="color: var(--coffee)">Grinder</label>
+            <select id="grinder" class="input-field" required>
+              <option value="">Select grinder</option>
+              <option value="c3-esp">Timemore C3 ESP</option>
+              <option value="s3-esp">Timemore S3 ESP</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-xs font-semibold uppercase tracking-wider" style="color: var(--coffee)">Brewer</label>
+            <span id="recHint" class="rec-hint hidden">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z"/></svg>
+              <span id="recHintText"></span>
+            </span>
+          </div>
+          <select id="brewer" class="input-field" required>
+            <option value="auto">✨ Auto (recommended)</option>
+            <option value="v60-switch">V60 Switch</option>
+            <option value="hario-suiren">Hario Suiren</option>
+            <option value="orea-v4">Orea V4</option>
+            <option value="aeropress">Aeropress</option>
+          </select>
+          <p class="text-[11px] mt-1.5 italic" style="color: var(--coffee-muted)">
+            Pick a specific brewer, or leave on Auto and we'll recommend the best fit for your bean.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3 mt-6">
+          <button type="submit" id="generateBtn" class="btn-primary flex items-center justify-center gap-2">
+            <span id="btnText">Generate recipe</span>
+            <div id="btnLoader" class="loader hidden"></div>
+          </button>
+          <button type="button" id="clearFormBtn" class="btn-ghost" title="Clear all fields">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
+              <path d="M3 3v5h5"/>
+            </svg>
+            <span id="clearBtnText">Clear</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card rounded-3xl p-8 min-h-[500px] flex items-center justify-center" id="recipeCard">
+      <div id="emptyState" class="text-center">
+        <div class="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, rgba(201,136,47,0.2), rgba(107,68,35,0.1))">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#c9882f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4Z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-semibold mb-2" style="color: var(--espresso)">Your recipe will appear here</h3>
+        <p class="text-sm max-w-xs mx-auto" style="color: var(--coffee-muted)">Fill in the bean details and our engine will generate a custom brew recipe with expected flavor profile tailored to your coffee.</p>
+      </div>
+
+      <div id="recipeContent" class="hidden w-full fade-in"></div>
+    </div>
+  </div>
+
+  <section>
+    <div class="flex items-center justify-between mb-5">
+      <div>
+        <h3 class="text-2xl font-semibold" style="color: var(--espresso)">Your brew log</h3>
+        <p class="text-sm" style="color: var(--coffee-muted)">Past recipes saved to your brewbook</p>
+      </div>
+      <button id="clearAllBtn" class="text-xs font-medium px-3 py-1.5 rounded-lg transition" style="color: var(--rust)" onmouseover="this.style.background='var(--cream-dark)'" onmouseout="this.style.background='transparent'">Clear all</button>
+    </div>
+    <div id="brewList" class="card rounded-2xl divide-y overflow-visible" style="border-color: var(--card-border)">
+      <div id="emptyLog" class="p-10 text-center text-sm" style="color: var(--coffee-muted)">
+        No brews recorded yet. Generate your first recipe above.
+      </div>
+    </div>
+  </section>
+
+  <footer class="text-center mt-16 py-8 text-xs" style="color: var(--coffee-muted)">
+    Brewed with care · Recipe engine based on SCA guidelines · Flavor profiles from specialty coffee cupping databases
+  </footer>
+</div>
+
+<div id="popoverRoot"></div>
+
+<script>
+  // ============ THEME ============
+  const themeToggle = document.getElementById('themeToggle');
+  const savedTheme = localStorage.getItem('brewbook-theme');
+  if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+  }
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    const isDark = document.documentElement.classList.contains('dark');
+    localStorage.setItem('brewbook-theme', isDark ? 'dark' : 'light');
+  });
+
+  // ============ DATE ============
+  const today = new Date();
+  document.getElementById('todayDate').textContent = today.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  document.getElementById('roastDate').max = today.toISOString().split('T')[0];
+
+  const roastDateInput = document.getElementById('roastDate');
+  const freshnessHint = document.getElementById('freshnessHint');
+  roastDateInput.addEventListener('change', () => {
+    const val = roastDateInput.value;
+    if (!val) { freshnessHint.classList.add('hidden'); return; }
+    const roast = new Date(val);
+    const days = Math.floor((today - roast) / (1000 * 60 * 60 * 24));
+    freshnessHint.classList.remove('hidden');
+    if (days < 5) {
+      freshnessHint.className = 'freshness-badge ml-2 freshness-fresh';
+      freshnessHint.textContent = `${days}d · fresh`;
+    } else if (days <= 21) {
+      freshnessHint.className = 'freshness-badge ml-2 freshness-peak';
+      freshnessHint.textContent = `${days}d · peak`;
+    } else {
+      freshnessHint.className = 'freshness-badge ml-2 freshness-stale';
+      freshnessHint.textContent = `${days}d · aging`;
+    }
+  });
+
+  // ============================================================
+  // ============ COFFEE FLAVOR PROFILE DATABASE ================
+  // ============================================================
+  const COFFEE_COUNTRY = {
+    'ethiopia':   { country: 'Ethiopia',   aromas: ['jasmine','bergamot','lemon blossom'], acidity: 'bright, citric', body: 'light to medium, silky', notes: ['lemon','peach','floral','black tea'], sweetness: 'honey-like', finish: 'clean, lingering', desc: 'Ethiopian coffees are celebrated for their aromatic complexity — expect floral top-notes, citrus acidity, and a tea-like delicacy.' },
+    'colombia':   { country: 'Colombia',   aromas: ['caramel','red apple','panela'], acidity: 'balanced, malic', body: 'medium, rounded', notes: ['caramel','red apple','cocoa','stone fruit'], sweetness: 'brown sugar', finish: 'smooth, chocolate', desc: 'Colombian coffees offer a balanced cup with clean sweetness, juicy malic acidity, and caramel-cocoa undertones.' },
+    'kenya':      { country: 'Kenya',      aromas: ['blackcurrant','tomato','grapefruit'], acidity: 'intense, phosphoric', body: 'medium, syrupy', notes: ['blackcurrant','tomato','grapefruit','red wine'], sweetness: 'brown sugar', finish: 'juicy, long', desc: 'Kenyan coffees are famous for their intense blackcurrant and tomato-like acidity, with a juicy, winey body.' },
+    'panama':     { country: 'Panama',     aromas: ['jasmine','tropical fruit','honey'], acidity: 'delicate, citric', body: 'light to medium, tea-like', notes: ['jasmine','mango','papaya','bergamot'], sweetness: 'honey, floral', finish: 'elegant, long', desc: 'Panamanian coffees, especially Geishas, are among the most prized — expect jasmine florals, tropical fruits, and a delicate tea-like body.' },
+    'costa rica': { country: 'Costa Rica', aromas: ['honey','apricot','vanilla'], acidity: 'bright, citric', body: 'medium, creamy', notes: ['honey','apricot','vanilla','brown sugar'], sweetness: 'honey, caramel', finish: 'clean, sweet', desc: 'Costa Rican coffees are clean and honey-sweet, with stone-fruit acidity and a creamy body.' },
+    'brazil':     { country: 'Brazil',     aromas: ['peanut','chocolate','caramel'], acidity: 'low, soft', body: 'heavy, creamy', notes: ['dark chocolate','peanut','caramel','praline'], sweetness: 'caramel', finish: 'lingering, nutty', desc: 'Brazilian coffees are low-acid, heavy-bodied, with nutty-chocolate notes and pronounced caramel sweetness.' },
+    'guatemala':  { country: 'Guatemala',  aromas: ['cocoa','spice','orange'], acidity: 'balanced, malic', body: 'medium-full, syrupy', notes: ['dark chocolate','orange','cinnamon','caramel'], sweetness: 'brown sugar', finish: 'long, spiced', desc: 'Guatemalan coffees combine cocoa depth with bright citrus acidity and warming spice notes.' },
+    'rwanda':     { country: 'Rwanda',     aromas: ['red berry','floral','citrus'], acidity: 'bright, malic', body: 'medium, silky', notes: ['red currant','orange blossom','plum','brown sugar'], sweetness: 'honey', finish: 'clean, fruity', desc: 'Rwandan coffees deliver juicy red-fruit acidity, floral aromatics, and a silky body.' },
+    'burundi':    { country: 'Burundi',    aromas: ['red fruit','fig','black tea'], acidity: 'bright, citric', body: 'medium, round', notes: ['red berry','fig','black tea','cocoa'], sweetness: 'brown sugar', finish: 'clean, tea-like', desc: 'Burundian coffees balance red-fruit acidity with tea-like delicacy and fig sweetness.' },
+    'indonesia':  { country: 'Indonesia',  aromas: ['earth','herbal','dark chocolate'], acidity: 'low, muted', body: 'heavy, syrupy', notes: ['dark chocolate','cedar','earth','tobacco'], sweetness: 'molasses', finish: 'long, earthy', desc: 'Indonesian coffees (especially Sumatra) are known for earthy, herbal depth with heavy body and dark chocolate notes.' },
+    'yemen':      { country: 'Yemen',      aromas: ['dried fruit','wine','spice'], acidity: 'moderate, winey', body: 'medium-full, syrupy', notes: ['dried apricot','red wine','cardamom','cocoa'], sweetness: 'dates, molasses', finish: 'complex, spicy', desc: 'Yemeni coffees are ancient and wild — dried-fruit sweetness, winey acidity, and warming spice notes.' },
+    'honduras':   { country: 'Honduras',   aromas: ['caramel','stone fruit','nut'], acidity: 'balanced, malic', body: 'medium, creamy', notes: ['caramel','peach','almond','cocoa'], sweetness: 'brown sugar', finish: 'smooth', desc: 'Honduran coffees are well-balanced with stone-fruit sweetness, nutty undertones, and caramel finish.' },
+    'el salvador':{ country: 'El Salvador',aromas: ['honey','stone fruit','chocolate'], acidity: 'balanced, citric', body: 'medium, silky', notes: ['honey','plum','milk chocolate','orange'], sweetness: 'honey, caramel', finish: 'clean, sweet', desc: 'Salvadoran coffees combine honey sweetness with stone fruit and milk chocolate notes.' },
+    'peru':       { country: 'Peru',       aromas: ['cocoa','nut','citrus'], acidity: 'moderate, balanced', body: 'medium', notes: ['cocoa','almond','orange','brown sugar'], sweetness: 'brown sugar', finish: 'clean, nutty', desc: 'Peruvian coffees are balanced and nutty, with mild citrus and cocoa notes.' },
+    'tanzania':   { country: 'Tanzania',   aromas: ['berry','wine','spice'], acidity: 'bright, winey', body: 'medium, juicy', notes: ['blackberry','red wine','cocoa','clove'], sweetness: 'brown sugar', finish: 'long, winey', desc: 'Tanzanian coffees (especially Peaberry) show berry fruit, winey acidity, and spiced finish.' },
+    'mexico':     { country: 'Mexico',     aromas: ['chocolate','nut','caramel'], acidity: 'moderate, soft', body: 'medium, creamy', notes: ['milk chocolate','almond','caramel','brown sugar'], sweetness: 'caramel', finish: 'clean', desc: 'Mexican coffees are smooth, nutty-chocolate with soft acidity and caramel sweetness.' },
+    'papua':      { country: 'Papua New Guinea', aromas: ['tropical fruit','herbal','cocoa'], acidity: 'bright, citric', body: 'medium-full', notes: ['mango','herbs','dark chocolate','brown sugar'], sweetness: 'brown sugar', finish: 'long, herbal', desc: 'PNG coffees combine tropical fruit brightness with herbal complexity and cocoa depth.' },
+    'india':      { country: 'India',      aromas: ['spice','nut','dark chocolate'], acidity: 'low, soft', body: 'full, syrupy', notes: ['cardamom','pepper','dark chocolate','nuts'], sweetness: 'molasses', finish: 'spiced', desc: 'Indian coffees are full-bodied and spiced, with low acidity and deep chocolate notes.' },
+    'uganda':     { country: 'Uganda',     aromas: ['berry','chocolate','wine'], acidity: 'moderate, winey', body: 'medium-full', notes: ['red berry','dark chocolate','prune','wine'], sweetness: 'brown sugar', finish: 'winey', desc: 'Ugandan coffees combine berry fruit with chocolate depth and winey complexity.' },
+    'ecuador':    { country: 'Ecuador',    aromas: ['floral','citrus','cocoa'], acidity: 'bright, citric', body: 'medium, silky', notes: ['orange blossom','lemon','cocoa','caramel'], sweetness: 'honey', finish: 'clean', desc: 'Ecuadorian coffees show floral-citrus brightness with cocoa undertones.' },
+    'jamaica':    { country: 'Jamaica',    aromas: ['floral','nut','sweet herb'], acidity: 'bright, clean', body: 'medium, silky', notes: ['jasmine','almond','sweet herbs','citrus'], sweetness: 'clean', finish: 'elegant', desc: 'Jamaican Blue Mountain is famous for its clean, balanced, elegant cup.' },
+    'vietnam':    { country: 'Vietnam',    aromas: ['chocolate','nut','earth'], acidity: 'low', body: 'heavy', notes: ['dark chocolate','peanut','earth','smoke'], sweetness: 'mild', finish: 'bold', desc: 'Vietnamese coffees are bold, chocolatey, and full-bodied — often roasted dark.' },
+    'sumatra':    { country: 'Indonesia',  aromas: ['earth','herbal','dark chocolate'], acidity: 'low, muted', body: 'heavy, syrupy', notes: ['dark chocolate','cedar','earth','tobacco'], sweetness: 'molasses', finish: 'long, earthy', desc: 'Sumatran coffees are earthy, herbal, and full-bodied with dark chocolate depth.' },
+    'java':       { country: 'Indonesia',  aromas: ['malt','earth','dark chocolate'], acidity: 'low', body: 'heavy, syrupy', notes: ['malt','dark chocolate','earth','spice'], sweetness: 'molasses', finish: 'long, rustic', desc: 'Java coffees are rustic and heavy-bodied with malt and earth notes.' }
+  };
+
+  const COFFEE_REGION = {
+    'yirgacheffe': { region: 'Yirgacheffe', aromas: ['jasmine','bergamot','lemon'], notes: ['jasmine','bergamot','lemon','peach','black tea'], body: 'light, tea-like', acidity: 'bright, floral-citric', desc: 'Yirgacheffe is the jewel of Ethiopian coffee — renowned for jasmine aromatics and tea-like delicacy.' },
+    'guji':        { region: 'Guji', aromas: ['stone fruit','floral','berry'], notes: ['peach','strawberry','jasmine','citrus'], body: 'medium, juicy', acidity: 'bright, citric', desc: 'Guji coffees balance stone-fruit sweetness with floral aromatics and juicy acidity.' },
+    'sidamo':      { region: 'Sidamo', aromas: ['berry','wine','floral'], notes: ['blueberry','wine','jasmine','citrus'], body: 'medium, syrupy', acidity: 'winey, bright', desc: 'Sidamo coffees show berry fruit and winey depth with floral complexity.' },
+    'gedeb':       { region: 'Gedeb', aromas: ['floral','citrus','stone fruit'], notes: ['jasmine','lemon','peach','black tea'], body: 'light to medium', acidity: 'bright', desc: 'Gedeb coffees are floral and citrus-forward with delicate tea-like body.' },
+    'kochere':     { region: 'Kochere', aromas: ['jasmine','bergamot','lemon'], notes: ['jasmine','bergamot','lemon','peach'], body: 'light, silky', acidity: 'bright, floral', desc: 'Kochere is a Yirgacheffe micro-region known for intense jasmine and bergamot.' },
+    'konga':       { region: 'Konga', aromas: ['berry','floral','citrus'], notes: ['blueberry','jasmine','lemon','peach'], body: 'medium, juicy', acidity: 'bright, citric', desc: 'Konga washing station produces complex cups with berry fruit and floral aromatics.' },
+    'shakiso':     { region: 'Shakiso', aromas: ['berry','floral','stone fruit'], notes: ['strawberry','jasmine','peach','citrus'], body: 'medium, silky', acidity: 'bright', desc: 'Shakiso coffees combine berry sweetness with floral complexity.' },
+    'hambela':     { region: 'Hambela', aromas: ['berry','floral','citrus'], notes: ['blueberry','strawberry','jasmine','lemon'], body: 'medium, juicy', acidity: 'bright, winey', desc: 'Hambela naturals are known for intense berry fruit and floral aromatics.' },
+    'banko':       { region: 'Banko', aromas: ['berry','floral','stone fruit'], notes: ['blueberry','jasmine','peach','citrus'], body: 'medium', acidity: 'bright', desc: 'Banko coffees showcase berry fruit and floral complexity.' },
+    'huila':       { region: 'Huila', aromas: ['caramel','red fruit','cocoa'], notes: ['caramel','red apple','cocoa','plum'], body: 'medium, rounded', acidity: 'balanced, malic', desc: 'Huila produces balanced Colombian cups with caramel sweetness and red fruit.' },
+    'nariño':      { region: 'Nariño', aromas: ['caramel','citrus','cocoa'], notes: ['caramel','orange','cocoa','brown sugar'], body: 'medium', acidity: 'bright, citric', desc: 'Nariño coffees have bright citrus with caramel-cocoa depth.' },
+    'cauca':       { region: 'Cauca', aromas: ['caramel','stone fruit','nut'], notes: ['caramel','peach','almond','cocoa'], body: 'medium, creamy', acidity: 'balanced', desc: 'Cauca coffees are creamy and balanced with stone fruit sweetness.' },
+    'nyeri':       { region: 'Nyeri', aromas: ['blackcurrant','tomato','citrus'], notes: ['blackcurrant','tomato','grapefruit','red wine'], body: 'medium, syrupy', acidity: 'intense, phosphoric', desc: 'Nyeri is Kenya\'s star region — intense blackcurrant and tomato-like acidity.' },
+    'kirinyaga':   { region: 'Kirinyaga', aromas: ['blackcurrant','berry','citrus'], notes: ['blackcurrant','red berry','grapefruit','brown sugar'], body: 'medium, juicy', acidity: 'bright, winey', desc: 'Kirinyaga coffees show intense berry fruit and winey acidity.' },
+    'boquete':     { region: 'Boquete', aromas: ['jasmine','tropical fruit','honey'], notes: ['jasmine','mango','papaya','bergamot'], body: 'light to medium', acidity: 'delicate, citric', desc: 'Boquete is Panama\'s premium region, home to legendary Geishas.' },
+    'volcán':      { region: 'Volcán', aromas: ['jasmine','tropical','floral'], notes: ['jasmine','tropical fruit','bergamot','honey'], body: 'light to medium', acidity: 'delicate', desc: 'Volcán produces some of Panama\'s finest coffees.' },
+    'cerrado':     { region: 'Cerrado', aromas: ['chocolate','nut','caramel'], notes: ['dark chocolate','peanut','caramel','praline'], body: 'heavy, creamy', acidity: 'low', desc: 'Cerrado Mineiro is Brazil\'s premier region for nutty-chocolate coffees.' },
+    'mogiana':     { region: 'Mogiana', aromas: ['chocolate','nut','caramel'], notes: ['milk chocolate','almond','caramel','prune'], body: 'medium-full', acidity: 'low', desc: 'Mogiana produces classic Brazilian cups with chocolate and nut.' },
+    'tarrazú':     { region: 'Tarrazú', aromas: ['honey','citrus','chocolate'], notes: ['honey','orange','milk chocolate','brown sugar'], body: 'medium, creamy', acidity: 'bright', desc: 'Tarrazú is Costa Rica\'s most famous region — bright, honey-sweet cups.' },
+    'huehuetenango':{ region: 'Huehuetenango', aromas: ['chocolate','citrus','spice'], notes: ['dark chocolate','orange','cinnamon','caramel'], body: 'medium-full', acidity: 'bright, malic', desc: 'Huehuetenango produces complex Guatemalan cups with chocolate and citrus.' },
+    'antigua':     { region: 'Antigua', aromas: ['chocolate','spice','smoke'], notes: ['dark chocolate','cinnamon','smoke','caramel'], body: 'full, syrupy', acidity: 'balanced', desc: 'Antigua coffees are spiced, chocolatey, with a signature smoky note.' },
+    'marcala':     { region: 'Marcala', aromas: ['caramel','stone fruit','nut'], notes: ['caramel','peach','almond','cocoa'], body: 'medium', acidity: 'balanced', desc: 'Marcala produces balanced Honduran cups with stone fruit and nut.' }
+  };
+
+  const COFFEE_VARIETY = {
+    'geisha':    { variety: 'Geisha', aromas: ['jasmine','bergamot','tropical fruit'], notes: ['jasmine','bergamot','mango','papaya','honey'], body: 'light, tea-like', acidity: 'delicate, floral-citric', desc: 'Geisha is the most prized coffee variety — expect jasmine florals, bergamot, and tropical fruit with an elegant tea-like body.' },
+    'gesha':     { variety: 'Geisha', aromas: ['jasmine','bergamot','tropical fruit'], notes: ['jasmine','bergamot','mango','papaya','honey'], body: 'light, tea-like', acidity: 'delicate, floral-citric', desc: 'Geisha (also spelled Gesha) — jasmine florals, bergamot, tropical fruit with tea-like elegance.' },
+    'pacamara':  { variety: 'Pacamara', aromas: ['stone fruit','chocolate','spice'], notes: ['plum','dark chocolate','cinnamon','orange'], body: 'full, creamy', acidity: 'balanced, malic', desc: 'Pacamara offers full body, stone-fruit sweetness, and complex chocolate-spice notes.' },
+    'pink bourbon': { variety: 'Pink Bourbon', aromas: ['floral','tropical','stone fruit'], notes: ['jasmine','mango','peach','honey'], body: 'medium, silky', acidity: 'bright, citric', desc: 'Pink Bourbon is a prized Colombian hybrid with floral aromatics and tropical fruit.' },
+    'wush wush': { variety: 'Wush Wush', aromas: ['floral','tropical','berry'], notes: ['jasmine','tropical fruit','berry','honey'], body: 'medium, juicy', acidity: 'bright', desc: 'Wush Wush is a rare Ethiopian variety with intense florals and tropical fruit.' },
+    'sudan rume':{ variety: 'Sudan Rume', aromas: ['floral','spice','berry'], notes: ['jasmine','spice','berry','honey'], body: 'medium', acidity: 'bright', desc: 'Sudan Rume is a rare heirloom variety with floral-spice complexity.' },
+    'sl28':      { variety: 'SL28', aromas: ['blackcurrant','citrus','berry'], notes: ['blackcurrant','grapefruit','red berry','brown sugar'], body: 'medium, juicy', acidity: 'intense, phosphoric', desc: 'SL28 is Kenya\'s classic variety — intense blackcurrant and citrus acidity.' },
+    'sl34':      { variety: 'SL34', aromas: ['berry','citrus','wine'], notes: ['red berry','citrus','red wine','brown sugar'], body: 'medium, winey', acidity: 'bright, winey', desc: 'SL34 delivers berry fruit and winey complexity.' },
+    'bourbon':   { variety: 'Bourbon', aromas: ['caramel','stone fruit','floral'], notes: ['caramel','peach','jasmine','brown sugar'], body: 'medium, silky', acidity: 'balanced, citric', desc: 'Bourbon is prized for its sweet, clean cup with caramel and stone fruit.' },
+    'typica':    { variety: 'Typica', aromas: ['floral','citrus','sweet'], notes: ['floral','citrus','brown sugar','tea'], body: 'medium', acidity: 'bright, clean', desc: 'Typica is the original Arabica variety — clean, floral, and sweet.' },
+    'caturra':   { variety: 'Caturra', aromas: ['citrus','caramel','nut'], notes: ['citrus','caramel','almond','brown sugar'], body: 'medium', acidity: 'bright, citric', desc: 'Caturra offers bright citrus with caramel sweetness.' },
+    'catuai':    { variety: 'Catuaí', aromas: ['chocolate','nut','citrus'], notes: ['chocolate','almond','citrus','caramel'], body: 'medium', acidity: 'balanced', desc: 'Catuaí is balanced and clean with chocolate-nut notes.' },
+    'castillo':  { variety: 'Castillo', aromas: ['caramel','chocolate','nut'], notes: ['caramel','milk chocolate','almond','brown sugar'], body: 'medium', acidity: 'balanced', desc: 'Castillo is a Colombian variety with balanced chocolate-caramel profile.' },
+    'maragogipe':{ variety: 'Maragogipe', aromas: ['floral','citrus','nut'], notes: ['floral','citrus','almond','brown sugar'], body: 'light to medium', acidity: 'bright', desc: 'Maragogipe (elephant bean) is delicate and floral.' },
+    'mokka':     { variety: 'Mokka', aromas: ['chocolate','wine','berry'], notes: ['dark chocolate','red wine','berry','spice'], body: 'medium, winey', acidity: 'winey', desc: 'Mokka variety shows winey complexity with chocolate-berry notes.' }
+  };
+
+  const COFFEE_FARM = {
+    'esmeralda':      { farm: 'Hacienda La Esmeralda', desc: 'Hacienda La Esmeralda in Panama is legendary for its Geisha lots — consistently among the world\'s most expensive and celebrated coffees. Expect jasmine florals, bergamot, and tropical fruit with tea-like elegance.', aromas: ['jasmine','bergamot','tropical'], notes: ['jasmine','bergamot','mango','papaya','honey'], body: 'light, tea-like', acidity: 'delicate, floral-citric' },
+    'gesha village':  { farm: 'Gesha Village', desc: 'Gesha Village in Ethiopia\'s Bench Maji zone grows the original Geisha variety in its ancestral home. Expect intense florals, tropical fruit, and tea-like elegance.', aromas: ['jasmine','tropical fruit','bergamot'], notes: ['jasmine','mango','papaya','bergamot','honey'], body: 'light to medium, silky', acidity: 'delicate, floral-citric' },
+    'ninety plus':    { farm: 'Ninety Plus', desc: 'Ninety Plus Gesha Estates produces some of the world\'s most exclusive coffees — intense florals, tropical fruit, and extraordinary complexity.', aromas: ['jasmine','tropical','berry'], notes: ['jasmine','tropical fruit','berry','honey','bergamot'], body: 'light to medium', acidity: 'delicate, complex' },
+    'cerro azul':     { farm: 'Cerro Azul', desc: 'Cerro Azul in Colombia\'s Valle del Cauca is known for exceptional Geisha and Pink Bourbon lots — bright, floral, and juicy.', aromas: ['floral','tropical','stone fruit'], notes: ['jasmine','mango','peach','honey'], body: 'medium, silky', acidity: 'bright, citric' },
+    'monteblanco':    { farm: 'Finca Monteblanco', desc: 'Finca Monteblanco in Huila, Colombia is famous for experimental processes and vibrant Pink Bourbon lots.', aromas: ['tropical','floral','stone fruit'], notes: ['tropical fruit','jasmine','peach','honey'], body: 'medium, juicy', acidity: 'bright' },
+    'el paraíso':     { farm: 'El Paraíso', desc: 'Finca El Paraíso in Cauca, Colombia, Diego Bermudez\'s farm, known for experimental fermentation and intense fruit-forward profiles.', aromas: ['tropical','berry','floral'], notes: ['tropical fruit','berry','floral','wine'], body: 'medium, juicy', acidity: 'bright, winey' },
+    'la esperanza':   { farm: 'La Esperanza', desc: 'Hacienda La Esperanza in Colombia produces complex, fruity coffees with experimental processing.', aromas: ['tropical','berry','wine'], notes: ['tropical fruit','berry','red wine','honey'], body: 'medium, juicy', acidity: 'bright, winey' },
+    'hambela':        { farm: 'Hambela', desc: 'Hambela Estate in Guji, Ethiopia is renowned for its vibrant natural-processed coffees with intense berry and floral notes.', aromas: ['berry','floral','stone fruit'], notes: ['blueberry','strawberry','jasmine','peach'], body: 'medium, juicy', acidity: 'bright, winey' },
+    'daterra':        { farm: 'Daterra', desc: 'Daterra in Brazil is known for innovative lots and balanced, chocolatey cups.', aromas: ['chocolate','nut','caramel'], notes: ['milk chocolate','almond','caramel','praline'], body: 'medium-full', acidity: 'low, balanced' },
+    'santa felicia':  { farm: 'Santa Felicia', desc: 'Finca Santa Felicia in Guatemala produces balanced cups with chocolate and citrus.', aromas: ['chocolate','citrus','spice'], notes: ['dark chocolate','orange','cinnamon','caramel'], body: 'medium-full', acidity: 'balanced' },
+    'kilimanjaro':    { farm: 'Kilimanjaro', desc: 'Coffees from Kilimanjaro, Tanzania show berry fruit and winey complexity.', aromas: ['berry','wine','spice'], notes: ['berry','red wine','spice','brown sugar'], body: 'medium, winey', acidity: 'winey' },
+    'kainamui':       { farm: 'Kainamui', desc: 'Kainamui cooperative in Kenya\'s Kirinyaga region produces intense, juicy cups with blackcurrant and citrus.', aromas: ['blackcurrant','citrus','berry'], notes: ['blackcurrant','grapefruit','red berry','brown sugar'], body: 'medium, juicy', acidity: 'intense, phosphoric' },
+    'othaya':         { farm: 'Othaya', desc: 'Othaya cooperative in Kenya\'s Nyeri region is famous for intense, winey cups with blackcurrant and tomato notes.', aromas: ['blackcurrant','tomato','citrus'], notes: ['blackcurrant','tomato','grapefruit','red wine'], body: 'medium, syrupy', acidity: 'intense, phosphoric' },
+    'huye':           { farm: 'Huye Mountain', desc: 'Huye Mountain in Rwanda produces vibrant cups with red fruit and floral notes.', aromas: ['red berry','floral','citrus'], notes: ['red currant','orange blossom','plum','brown sugar'], body: 'medium, silky', acidity: 'bright, malic' }
+  };
+
+  function analyzeCoffeeName(name, country) {
+    if (!name || name.trim().length < 2) return null;
+    const normalized = name.toLowerCase();
+    const tokens = normalized.split(/[\s,()'"\-]+/).filter(t => t.length > 1);
+
+    const matches = { variety: null, farm: null, region: null, country: null };
+    const scores = { variety: 0, farm: 0, region: 0, country: 0 };
+
+    for (const [key, data] of Object.entries(COFFEE_COUNTRY)) {
+      if (normalized.includes(key) || (country && country.toLowerCase().includes(key))) {
+        if (!matches.country || tokens.filter(t => key.includes(t)).length > scores.country) {
+          matches.country = data;
+          scores.country = tokens.filter(t => key.includes(t)).length || 1;
+        }
+      }
+    }
+    for (const [key, data] of Object.entries(COFFEE_REGION)) {
+      if (normalized.includes(key)) {
+        const score = tokens.filter(t => key.includes(t) || t === key).length;
+        if (!matches.region || score > scores.region) {
+          matches.region = data;
+          scores.region = score || 1;
+        }
+      }
+    }
+    for (const [key, data] of Object.entries(COFFEE_VARIETY)) {
+      if (normalized.includes(key)) {
+        const score = tokens.filter(t => key.includes(t) || t === key).length;
+        if (!matches.variety || score > scores.variety) {
+          matches.variety = data;
+          scores.variety = score || 1;
+        }
+      }
+    }
+    for (const [key, data] of Object.entries(COFFEE_FARM)) {
+      if (normalized.includes(key)) {
+        const score = tokens.filter(t => key.includes(t) || t === key).length;
+        if (!matches.farm || score > scores.farm) {
+          matches.farm = data;
+          scores.farm = score || 1;
+        }
+      }
+    }
+
+    const sources = [matches.country, matches.region, matches.farm, matches.variety].filter(Boolean);
+    if (sources.length === 0) return null;
+
+    const allNotes = [];
+    const seen = new Set();
+    [matches.variety, matches.farm, matches.region, matches.country].forEach(s => {
+      if (s && s.notes) s.notes.forEach(n => {
+        const k = n.toLowerCase();
+        if (!seen.has(k)) { seen.add(k); allNotes.push(n); }
+      });
+    });
+
+    const allAromas = [];
+    const aromasSeen = new Set();
+    [matches.variety, matches.farm, matches.region, matches.country].forEach(s => {
+      if (s && s.aromas) s.aromas.forEach(n => {
+        const k = n.toLowerCase();
+        if (!aromasSeen.has(k)) { aromasSeen.add(k); allAromas.push(n); }
+      });
+    });
+
+    const desc = matches.variety?.desc || matches.farm?.desc || matches.region?.desc || matches.country?.desc;
+    const acidity = matches.variety?.acidity || matches.farm?.acidity || matches.region?.acidity || matches.country?.acidity;
+    const body = matches.variety?.body || matches.farm?.body || matches.region?.body || matches.country?.body;
+
+    return {
+      notes: allNotes.slice(0, 7),
+      aromas: allAromas.slice(0, 4),
+      acidity, body, desc,
+      matches: {
+        variety: matches.variety?.variety || null,
+        farm: matches.farm?.farm || null,
+        region: matches.region?.region || null,
+        country: matches.country?.country || null
+      },
+      sourceCount: sources.length
+    };
+  }
+
+  // ============ LIVE TASTE HINT ============
+  const coffeeNameInput = document.getElementById('coffeeName');
+  const countryInput = document.getElementById('country');
+  const tasteHint = document.getElementById('tasteHint');
+  let tasteDebounce = null;
+
+  function updateTasteHint() {
+    const name = coffeeNameInput.value;
+    const country = countryInput.value;
+    const profile = analyzeCoffeeName(name, country);
+
+    if (!profile) {
+      tasteHint.classList.remove('visible');
+      tasteHint.innerHTML = '';
+      return;
+    }
+
+    const sources = [];
+    if (profile.matches.variety) sources.push(`variety: <b>${profile.matches.variety}</b>`);
+    if (profile.matches.farm) sources.push(`farm: <b>${profile.matches.farm}</b>`);
+    if (profile.matches.region) sources.push(`region: <b>${profile.matches.region}</b>`);
+    if (profile.matches.country) sources.push(`origin: <b>${profile.matches.country}</b>`);
+
+    tasteHint.innerHTML = `
+      <div class="taste-label">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        Identified: ${sources.join(' · ')}
+      </div>
+      <div class="taste-chips">
+        ${profile.aromas.slice(0, 3).map(a => `<span class="taste-chip">🌸 ${a}</span>`).join('')}
+        ${profile.notes.slice(0, 4).map(n => `<span class="taste-chip">${n}</span>`).join('')}
+      </div>
+      <div class="taste-meta">Acidity: <b>${profile.acidity || 'unknown'}</b> · Body: <b>${profile.body || 'unknown'}</b></div>
+    `;
+    tasteHint.classList.add('visible');
+  }
+
+  coffeeNameInput.addEventListener('input', () => {
+    clearTimeout(tasteDebounce);
+    tasteDebounce = setTimeout(updateTasteHint, 300);
+  });
+  countryInput.addEventListener('input', () => {
+    clearTimeout(tasteDebounce);
+    tasteDebounce = setTimeout(updateTasteHint, 300);
+  });
+
+  // ============ CLEAR FORM BUTTON ============
+  const clearFormBtn = document.getElementById('clearFormBtn');
+  const clearBtnText = document.getElementById('clearBtnText');
+  const brewForm = document.getElementById('brewForm');
+
+  clearFormBtn.addEventListener('click', () => {
+    // Reset all fields
+    brewForm.reset();
+
+    // Hide freshness & taste hints
+    freshnessHint.classList.add('hidden');
+    freshnessHint.textContent = '';
+    tasteHint.classList.remove('visible');
+    tasteHint.innerHTML = '';
+
+    // Hide recommendation hint
+    document.getElementById('recHint').classList.add('hidden');
+
+    // Animate the button icon and show confirmation
+    clearFormBtn.classList.add('resetting');
+    clearBtnText.textContent = 'Cleared';
+    clearFormBtn.classList.add('flash-ok');
+
+    setTimeout(() => {
+      clearFormBtn.classList.remove('resetting');
+    }, 600);
+
+    setTimeout(() => {
+      clearFormBtn.classList.remove('flash-ok');
+      clearBtnText.textContent = 'Clear';
+    }, 1400);
+
+    // Return focus to the coffee name field for quick re-entry
+    coffeeNameInput.focus();
+  });
+
+  // ============ METHODS ============
+  const METHODS = {
+    'v60-switch': {
+      name: 'V60 Switch',
+      tagline: 'Hybrid immersion & percolation',
+      desc: 'The V60 Switch combines the clarity of pour-over with the body of immersion brewing. Ideal for highlighting delicate florals and bright acidity in high-altitude washed coffees.',
+      icon: '☕', category: 'v60', specs: null
+    },
+    'hario-suiren': {
+      name: 'Hario Suiren',
+      tagline: 'Steep-and-release with mesh filter · VDSU-02',
+      desc: 'The Hario Suiren (VDSU-02) is a 2-cup steep-and-release brewer from Japan, built around a heat-resistant Hario glass server with a removable brewing chamber on top. It ships with a <b>reusable stainless steel mesh filter</b> (no paper required) that lets more coffee oils through for a fuller, silkier body. A silicone lever on the side opens and closes the drain valve, letting you steep the coffee for as long as you like before releasing it through the mesh and spiral ribs into the server below. Perfect for naturals and honeys where you want pronounced sweetness, texture, and aromatic depth.',
+      icon: '🫖', category: 'steep-release',
+      specs: { 'Capacity': '2 cups · 300 ml', 'Filter': 'Stainless mesh', 'Origin': 'Made in Japan' }
+    },
+    'orea-v4': {
+      name: 'Orea V4',
+      tagline: 'Modular flat-bed brewer with 4 bottoms',
+      desc: 'The Orea V4 is a modular flat-bed brewer that ships with <b>4 interchangeable bottom plates</b>, each designed to control flow rate and extraction. The flat bottom and wide drain holes produce an even extraction with sparkling clarity. Choose your bottom based on your bean: faster flow for dense, high-altitude beans with complex aromatics; slower flow for softer, lower-altitude coffees or darker roasts where you want more body.',
+      icon: '◉', category: 'pour-over',
+      specs: { 'Capacity': '1-2 cups', 'Bottoms': '4 options', 'Bed': 'Flat' }
+    },
+    'aeropress': {
+      name: 'Aeropress',
+      tagline: 'Versatile immersion powerhouse',
+      desc: 'The Aeropress excels at extracting body and depth. Ideal for lower-altitude coffees, experimental ferments, and darker roasts where a full, syrupy cup is desired.',
+      icon: '⬤', category: 'aeropress', specs: null
+    }
+  };
+
+  const OREA_BOTTOMS = {
+    fast:   { name: 'Fast (4 holes)',   desc: 'Four large drain holes for rapid flow. Best for dense, high-altitude beans and light roasts where you want bright acidity and clarity without over-extraction.' },
+    medium: { name: 'Medium (2 holes)', desc: 'Two medium holes for balanced flow. The all-rounder — great for medium roasts and most washed coffees. Good extraction with moderate contact time.' },
+    slow:   { name: 'Slow (1 hole)',    desc: 'Single small hole for extended contact time. Ideal for naturals, honeys, and darker roasts where you want more body, sweetness, and depth.' },
+    closed: { name: 'Closed (no holes)',desc: 'Fully sealed for full immersion. Use for steep-and-release recipes or when you want maximum body and minimal clarity. Similar to French Press texture.' }
+  };
+
+  function recommendOreaBottom(process, altitude, roastLevel) {
+    const alt = parseInt(altitude);
+    const isHighAlt = alt >= 1700;
+    const isMedAlt = alt >= 1300 && alt < 1700;
+    const isNatural = process === 'natural';
+    const isHoney = process === 'honey';
+    const isFunky = process === 'anaerobic' || process === 'carbonic' || process === 'co-ferment';
+    const isLight = roastLevel === 'light' || roastLevel === 'light-medium';
+    const isDark = roastLevel === 'medium-dark' || roastLevel === 'dark';
+    if (isLight && isHighAlt) return 'fast';
+    if (isNatural || isHoney || isFunky) return 'slow';
+    if (isDark) return 'slow';
+    if (!isHighAlt && !isMedAlt) return 'medium';
+    return 'medium';
+  }
+
+  const GRINDER_C3_ESP = {
+    name: 'Timemore C3 ESP', unit: 'rotations from zero', unitShort: 'rot.',
+    v60: { light: '1.2.2', lightMedium: '1.4', medium: '1.6', mediumDark: '1.8.2', dark: '2.0.2' },
+    'pour-over': { light: '1.3', lightMedium: '1.5', medium: '1.8', mediumDark: '2.2', dark: '2.7.1' },
+    'steep-release': { light: '1.3.2', lightMedium: '1.6', medium: '1.9', mediumDark: '2.1', dark: '2.4.1' },
+    aeropress: { light: '1.1', lightMedium: '1.5', medium: '1.9', mediumDark: '2.4', dark: '2.8.1' }
+  };
+  const GRINDER_S3_ESP = {
+    name: 'Timemore S3 ESP', unit: 'clicks from zero', unitShort: 'clicks', totalClicks: 90,
+    v60: { light: 54, lightMedium: 60, medium: 66, mediumDark: 72, dark: 78 },
+    'pour-over': { light: 52, lightMedium: 58, medium: 65, mediumDark: 72, dark: 80 },
+    'steep-release': { light: 56, lightMedium: 62, medium: 68, mediumDark: 74, dark: 80 },
+    aeropress: { light: 50, lightMedium: 56, medium: 62, mediumDark: 70, dark: 76 }
+  };
+
+  const GRIND_LABELS = {
+    'fine':          { label: 'Fine',          microns: '200 – 350 µm' },
+    'fine-medium':   { label: 'Fine-Medium',   microns: '350 – 450 µm' },
+    'medium-fine':   { label: 'Medium-Fine',   microns: '450 – 550 µm' },
+    'medium':        { label: 'Medium',        microns: '550 – 650 µm' },
+    'medium-coarse': { label: 'Medium-Coarse', microns: '650 – 750 µm' },
+    'coarse':        { label: 'Coarse',        microns: '750 – 900 µm' }
+  };
+
+  function computeRecommendedMethod(data) {
+    const { process, altitude, roastLevel } = data;
+    if (!process || !altitude || !roastLevel) return null;
+    const alt = parseInt(altitude);
+    const isHighAlt = alt >= 1700;
+    const isMedAlt = alt >= 1300 && alt < 1700;
+    const isWashed = process === 'washed' || process === 'wet-hulled';
+    const isNatural = process === 'natural';
+    const isHoney = process === 'honey';
+    const isFunky = process === 'anaerobic' || process === 'carbonic' || process === 'co-ferment';
+
+    const scores = { 'v60-switch':0, 'hario-suiren':0, 'orea-v4':0, 'aeropress':0 };
+    if (isHighAlt) { scores['orea-v4'] += 3; scores['v60-switch'] += 2; }
+    if (isMedAlt)  { scores['hario-suiren'] += 2; scores['v60-switch'] += 2; }
+    if (!isHighAlt && !isMedAlt) { scores['aeropress'] += 3; scores['hario-suiren'] += 1; }
+
+    if (isWashed)  { scores['orea-v4'] += 2; scores['v60-switch'] += 2; }
+    if (isNatural) { scores['hario-suiren'] += 3; scores['v60-switch'] += 1; }
+    if (isHoney)   { scores['hario-suiren'] += 3; scores['aeropress'] += 1; }
+    if (isFunky)   { scores['aeropress'] += 3; scores['v60-switch'] += 1; }
+
+    if (roastLevel === 'light' || roastLevel === 'light-medium') {
+      scores['orea-v4'] += 2; scores['v60-switch'] += 1;
+    }
+    if (roastLevel === 'medium-dark' || roastLevel === 'dark') {
+      scores['aeropress'] += 2; scores['hario-suiren'] += 1;
+    }
+
+    return Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+  }
+
+  function generateRecipe(data) {
+    const { coffeeName, country, process, altitude, roastDate, roastLevel, grinder, brewerChoice } = data;
+
+    const roast = new Date(roastDate);
+    const daysSinceRoast = Math.floor((today - roast) / (1000 * 60 * 60 * 24));
+
+    const alt = parseInt(altitude);
+    const isHighAlt = alt >= 1700;
+    const isMedAlt = alt >= 1300 && alt < 1700;
+    const isWashed = process === 'washed' || process === 'wet-hulled';
+    const isNatural = process === 'natural';
+    const isHoney = process === 'honey';
+
+    const roastMap = {
+      'light':        { temp: 96, grind: 'medium-fine',    label: 'Light',        roastKey: 'light' },
+      'light-medium': { temp: 94, grind: 'medium-fine',    label: 'Light-Medium', roastKey: 'lightMedium' },
+      'medium':       { temp: 92, grind: 'medium',         label: 'Medium',       roastKey: 'medium' },
+      'medium-dark':  { temp: 90, grind: 'medium-coarse',  label: 'Medium-Dark',  roastKey: 'mediumDark' },
+      'dark':         { temp: 86, grind: 'coarse',         label: 'Dark',         roastKey: 'dark' }
+    };
+    const roastData = roastMap[roastLevel];
+
+    const recommended = computeRecommendedMethod({ process, altitude, roastLevel });
+    const bestMethod = (brewerChoice && brewerChoice !== 'auto') ? brewerChoice : recommended;
+    const userOverrode = brewerChoice && brewerChoice !== 'auto' && brewerChoice !== recommended;
+
+    let ratio;
+    if (roastLevel === 'light' && isHighAlt && isWashed) ratio = 17;
+    else if (roastLevel === 'light' || (isHighAlt && isWashed)) ratio = 16.5;
+    else if (isNatural || isHoney) ratio = 16;
+    else if (roastLevel === 'medium') ratio = 15.5;
+    else if (roastLevel === 'medium-dark') ratio = 15;
+    else ratio = 14;
+
+    let temp = roastData.temp;
+    let freshnessNote = '', freshnessClass = 'freshness-peak';
+    if (daysSinceRoast < 5) {
+      freshnessNote = `Your beans are only ${daysSinceRoast} days old. Let them degas 2–3 more days for best results, or extend the bloom to 60s.`;
+      freshnessClass = 'freshness-fresh';
+      temp -= 1;
+    } else if (daysSinceRoast > 30) {
+      freshnessNote = `These beans are ${daysSinceRoast} days post-roast. Grind slightly finer and bump temp by 1°C to compensate for staling.`;
+      freshnessClass = 'freshness-stale';
+      temp += 1;
+    } else if (daysSinceRoast >= 7 && daysSinceRoast <= 21) {
+      freshnessNote = `Perfect window — ${daysSinceRoast} days post-roast, peak flavor and CO₂ balance.`;
+      freshnessClass = 'freshness-peak';
+    }
+
+    const dose = 15;
+    const water = Math.round(dose * ratio);
+
+    const methodCategory = METHODS[bestMethod].category;
+    const grinderDb = grinder === 'c3-esp' ? GRINDER_C3_ESP : GRINDER_S3_ESP;
+    const exactSetting = grinderDb[methodCategory][roastData.roastKey];
+
+    const grindInfo = {
+      grinderName: grinderDb.name,
+      unit: grinderDb.unit, unitShort: grinderDb.unitShort,
+      setting: String(exactSetting),
+      grindLabel: GRIND_LABELS[roastData.grind].label,
+      microns: GRIND_LABELS[roastData.grind].microns
+    };
+
+    const oreaBottom = bestMethod === 'orea-v4' ? recommendOreaBottom(process, altitude, roastLevel) : null;
+    const flavorProfile = analyzeCoffeeName(coffeeName, country);
+
+    const steps = buildSteps(bestMethod, dose, water, temp, roastData.grind, process, daysSinceRoast, oreaBottom);
+
+    return {
+      method: bestMethod, methodInfo: METHODS[bestMethod],
+      recommendedMethod: recommended, recommendedName: METHODS[recommended].name,
+      userOverrode, dose, water, ratio, temp,
+      grind: roastData.grind, roastLabel: roastData.label,
+      daysSinceRoast, freshnessNote, freshnessClass, steps,
+      altTier: isHighAlt ? 'High altitude' : isMedAlt ? 'Medium altitude' : 'Low altitude',
+      processLabel: process.charAt(0).toUpperCase() + process.slice(1).replace('-', ' '),
+      grindInfo, oreaBottom, flavorProfile
+    };
+  }
+
+  function buildSteps(method, dose, water, temp, grind, process, daysSinceRoast, oreaBottom) {
+    const bloom = Math.round(dose * 3);
+    const mainWater = water - bloom;
+    const bloomTime = daysSinceRoast < 5 ? '60 seconds' : '45 seconds';
+
+    if (method === 'v60-switch') {
+      return [
+        `Heat water to <b>${temp}°C</b>. Rinse paper filter and preheat the brewer with switch CLOSED.`,
+        `Add <b>${dose}g</b> of ${grind} ground coffee. Start timer.`,
+        `Pour <b>${bloom}g</b> of water for bloom. Stir gently once. Wait ${bloomTime}.`,
+        `Open switch and let water drain. Close switch again.`,
+        `Pour remaining <b>${mainWater}g</b> in slow, steady circles. Open switch at 2:00.`,
+        `Total brew time target: <b>3:00 – 3:30</b>. Serve and enjoy.`
+      ];
+    }
+    if (method === 'orea-v4') {
+      const bottomName = oreaBottom ? OREA_BOTTOMS[oreaBottom].name : 'Medium (2 holes)';
+      return [
+        `Heat water to <b>${temp}°C</b>. Install the <b>${bottomName}</b> bottom plate and place a rinsed filter.`,
+        `Add <b>${dose}g</b> of ${grind} ground coffee, shake to level the bed.`,
+        `Bloom with <b>${bloom}g</b> of water, aggressive swirl. Wait ${bloomTime}.`,
+        `Pour to <b>${Math.round(water*0.6)}g</b> in concentric circles, steady stream.`,
+        `At 1:15, pour remaining water to reach <b>${water}g</b> total. Gentle swirl.`,
+        `Target draw-down complete by <b>2:45 – 3:15</b>. Flat bed = even extraction.`
+      ];
+    }
+    if (method === 'hario-suiren') {
+      return [
+        `Heat water to <b>${temp}°C</b>. Place the brewing chamber onto the glass server and <b>close the silicone lever</b> on the side (valve shut).`,
+        `Insert the <b>stainless steel mesh filter</b> — no paper needed. Rinse with hot water to preheat. Discard rinse water.`,
+        `Add <b>${dose}g</b> of ${grind} ground coffee. Shake gently to level the bed.`,
+        `Pour all <b>${water}g</b> of water in a slow spiral over the grounds. Stir 3 times to fully saturate.`,
+        `Steep for <b>2 minutes</b>. The mesh filter allows oils through, building a richer, silkier body than paper.`,
+        `Place over your serving cup and <b>flip the lever open</b> to release. Let gravity draw the coffee through. Target drain: <b>3:30 – 4:00</b>. Swirl and serve.`
+      ];
+    }
+    return [
+      `Heat water to <b>${temp}°C</b>. Use inverted method with a rinsed paper filter.`,
+      `Add <b>${dose}g</b> of ${grind} ground coffee to the chamber.`,
+      `Pour <b>${bloom}g</b> of water. Stir vigorously for 5 seconds. Bloom ${bloomTime}.`,
+      `Pour remaining water to <b>${water}g</b>. Stir gently once more.`,
+      `Cap and flip onto your cup at <b>1:30</b>. Press down slowly over 30 seconds.`,
+      `Stop pressing when you hear a hiss. Total time: <b>2:00</b>. Dilute to taste if desired.`
+    ];
+  }
+
+  const processSel = document.getElementById('process');
+  const altitudeInp = document.getElementById('altitude');
+  const roastSel = document.getElementById('roastLevel');
+  const brewerSel = document.getElementById('brewer');
+  const recHint = document.getElementById('recHint');
+  const recHintText = document.getElementById('recHintText');
+
+  function updateRecHint() {
+    const rec = computeRecommendedMethod({
+      process: processSel.value, altitude: altitudeInp.value, roastLevel: roastSel.value
+    });
+    if (rec) {
+      recHint.classList.remove('hidden');
+      recHintText.textContent = `We'd pick ${METHODS[rec].name}`;
+    } else {
+      recHint.classList.add('hidden');
+    }
+  }
+  [processSel, altitudeInp, roastSel].forEach(el => {
+    el.addEventListener('input', updateRecHint);
+    el.addEventListener('change', updateRecHint);
+  });
+
+  const form = document.getElementById('brewForm');
+  const btn = document.getElementById('generateBtn');
+  const btnText = document.getElementById('btnText');
+  const btnLoader = document.getElementById('btnLoader');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    btnText.textContent = 'Brewing...';
+    btnLoader.classList.remove('hidden');
+
+    const data = {
+      coffeeName: document.getElementById('coffeeName').value.trim(),
+      country: countryInput.value.trim(),
+      process: processSel.value,
+      roastDate: roastDateInput.value,
+      altitude: altitudeInp.value,
+      roastLevel: roastSel.value,
+      grinder: document.getElementById('grinder').value,
+      brewerChoice: brewerSel.value
+    };
+
+    setTimeout(() => {
+      const recipe = generateRecipe(data);
+      renderRecipe(recipe, data);
+      saveBrew(data, recipe);
+      btn.disabled = false;
+      btnText.textContent = 'Generate recipe';
+      btnLoader.classList.add('hidden');
+    }, 1100);
+  });
+
+  function renderRecipe(recipe, data) {
+    const emptyState = document.getElementById('emptyState');
+    const content = document.getElementById('recipeContent');
+    emptyState.classList.add('hidden');
+    content.classList.remove('hidden');
+
+    const gi = recipe.grindInfo;
+    const isS3 = gi.grinderName.includes('S3');
+    const mi = recipe.methodInfo;
+    const fp = recipe.flavorProfile;
+
+    const overrideNote = recipe.userOverrode
+      ? `<div class="override-note">
+           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
+           <span>You picked <b>${mi.name}</b>. Our recommendation was <b>${recipe.recommendedName}</b>.</span>
+         </div>` : '';
+
+    const specsBlock = mi.specs
+      ? `<div class="spec-grid">${Object.entries(mi.specs).map(([k, v]) => `
+          <div class="spec-item"><div class="spec-label">${k}</div><div class="spec-value">${v}</div></div>
+        `).join('')}</div>` : '';
+
+    const oreaBottomBlock = recipe.oreaBottom
+      ? `<div class="bottom-card bottom-recommended">
+           <h5>🎯 Recommended bottom: ${OREA_BOTTOMS[recipe.oreaBottom].name}</h5>
+           <p>${OREA_BOTTOMS[recipe.oreaBottom].desc}</p>
+         </div>
+         <div class="mt-3 space-y-2">
+           ${Object.entries(OREA_BOTTOMS).filter(([k]) => k !== recipe.oreaBottom).map(([k, v]) => `
+             <div class="bottom-card"><h5>${v.name}</h5><p>${v.desc}</p></div>
+           `).join('')}
+         </div>` : '';
+
+    let tastingBlock = '';
+    if (fp) {
+      const sourceLine = [];
+      if (fp.matches.variety) sourceLine.push(`variety: <b>${fp.matches.variety}</b>`);
+      if (fp.matches.farm) sourceLine.push(`farm: <b>${fp.matches.farm}</b>`);
+      if (fp.matches.region) sourceLine.push(`region: <b>${fp.matches.region}</b>`);
+      if (fp.matches.country) sourceLine.push(`origin: <b>${fp.matches.country}</b>`);
+
+      tastingBlock = `
+        <div class="tasting-card">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <p class="text-[10px] uppercase tracking-wider font-semibold" style="color: var(--coffee-muted)">
+              <svg style="display:inline;vertical-align:middle;margin-right:4px" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              Expected flavor profile
+            </p>
+          </div>
+          <p class="text-[11px] mb-2" style="color: var(--coffee-muted)">
+            Identified from name: ${sourceLine.join(' · ')}
+          </p>
+
+          <div class="tasting-grid">
+            <div class="tasting-item">
+              <div class="t-icon">🌸</div>
+              <div class="t-label">Aromas</div>
+              <div class="t-value">${fp.aromas.slice(0, 3).join(', ') || '—'}</div>
+            </div>
+            <div class="tasting-item">
+              <div class="t-icon">⚡</div>
+              <div class="t-label">Acidity</div>
+              <div class="t-value">${fp.acidity || '—'}</div>
+            </div>
+            <div class="tasting-item">
+              <div class="t-icon">💧</div>
+              <div class="t-label">Body</div>
+              <div class="t-value">${fp.body || '—'}</div>
+            </div>
+          </div>
+
+          <div class="flavor-wheel">
+            ${fp.notes.slice(0, 6).map(n => `<span class="flavor-pill">● ${n}</span>`).join('')}
+          </div>
+
+          ${fp.desc ? `<div class="tasting-note">"${fp.desc}"</div>` : ''}
+        </div>
+      `;
+    }
+
+    content.innerHTML = `
+      <div class="flex items-center gap-2 mb-6">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-semibold" style="background: var(--espresso); color: var(--bg)">2</div>
+        <h3 class="text-xl font-semibold" style="color: var(--espresso)">Your custom recipe</h3>
+      </div>
+
+      ${overrideNote}
+      ${tastingBlock}
+
+      <div class="mb-5">
+        <div class="flex items-start justify-between flex-wrap gap-3 mb-2">
+          <div>
+            <p class="text-xs uppercase tracking-wider font-semibold mb-1" style="color: var(--coffee-muted)">
+              ${recipe.userOverrode ? 'Your choice' : 'Recommended method'}
+            </p>
+            <h4 class="text-3xl font-semibold serif" style="color: var(--espresso)">${mi.name}</h4>
+            <p class="text-sm italic" style="color: var(--amber)">${mi.tagline}</p>
+          </div>
+          <div class="text-5xl opacity-80">${mi.icon}</div>
+        </div>
+        <p class="text-sm leading-relaxed mt-2" style="color: var(--coffee)">${mi.desc}</p>
+        ${specsBlock}
+        ${oreaBottomBlock}
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 mb-4">
+        <div class="stat-box text-center">
+          <p class="text-[10px] uppercase tracking-wider font-semibold mb-1" style="color: var(--coffee-muted)">Ratio</p>
+          <p class="text-2xl font-semibold" style="color: var(--espresso)">1:${recipe.ratio}</p>
+          <p class="text-[11px] mt-0.5" style="color: var(--coffee)">${recipe.dose}g → ${recipe.water}g</p>
+        </div>
+        <div class="stat-box text-center">
+          <p class="text-[10px] uppercase tracking-wider font-semibold mb-1" style="color: var(--coffee-muted)">Temperature</p>
+          <p class="text-2xl font-semibold" style="color: var(--espresso)">${recipe.temp}°C</p>
+          <p class="text-[11px] mt-0.5" style="color: var(--coffee)">${recipe.roastLabel} roast</p>
+        </div>
+        <div class="stat-box text-center">
+          <p class="text-[10px] uppercase tracking-wider font-semibold mb-1" style="color: var(--coffee-muted)">Grind size</p>
+          <p class="font-semibold" style="color: var(--espresso); font-size: 0.95rem">${gi.grindLabel}</p>
+          <p class="text-[10px] mt-0.5" style="color: var(--coffee)">${gi.microns}</p>
+        </div>
+      </div>
+
+      <div class="grinder-card mb-5">
+        <div class="flex items-start justify-between flex-wrap gap-3 mb-3">
+          <div>
+            <p class="text-[10px] uppercase tracking-wider font-semibold mb-1" style="color: var(--coffee-muted)">Your grinder</p>
+            <h4 class="text-lg font-semibold" style="color: var(--espresso)">${gi.grinderName}</h4>
+            <p class="text-xs mt-0.5" style="color: var(--coffee)">Adjustment: ${gi.unit}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-[10px] uppercase tracking-wider font-semibold mb-1" style="color: var(--coffee-muted)">Set dial to</p>
+            <div class="setting-display">${gi.setting}</div>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 items-center">
+          <span class="grinder-pill">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 7L9 18l-5-5"/></svg>
+            ${isS3 ? `${gi.setting} ${gi.unitShort} from zero (of ${GRINDER_S3_ESP.totalClicks})` : `${gi.setting} ${gi.unitShort} from zero`}
+          </span>
+          <span class="text-[11px]" style="color: var(--coffee-muted)">Target: <b style="color: var(--coffee)">${gi.microns}</b></span>
+        </div>
+        <p class="text-[11px] mt-3 leading-relaxed italic" style="color: var(--coffee-muted)">
+          ${isS3
+            ? `Dial in within the pour-over band (50–80 clicks). Each click = 0.015 mm. Go 2–3 clicks finer if brew is too fast, coarser if draw-down stalls past 3:30.`
+            : `Rotate the base to the exact position shown. The notation "1.4" means one full rotation + 4 partial steps. Fine-tune ±1 step based on flow rate.`}
+        </p>
+      </div>
+
+      <div class="rounded-xl p-4 mb-5" style="background: var(--input-bg); border: 1px solid var(--cream-dark)">
+        <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
+          <p class="text-xs uppercase tracking-wider font-semibold" style="color: var(--coffee-muted)">Bean profile</p>
+          <span class="freshness-badge ${recipe.freshnessClass}">${recipe.daysSinceRoast}d post-roast</span>
+        </div>
+        <div class="flex flex-wrap gap-1.5 mb-2">
+          <span class="tag">${data.country}</span>
+          <span class="tag">${recipe.processLabel}</span>
+          <span class="tag">${recipe.altTier} · ${data.altitude}m</span>
+          <span class="tag">Roasted ${new Date(data.roastDate).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}</span>
+        </div>
+        ${recipe.freshnessNote ? `<p class="text-xs italic leading-relaxed" style="color: var(--coffee)">💡 ${recipe.freshnessNote}</p>` : ''}
+      </div>
+
+      <div>
+        <p class="text-xs uppercase tracking-wider font-semibold mb-3" style="color: var(--coffee-muted)">Step-by-step</p>
+        <div class="space-y-3">
+          ${recipe.steps.map((step, i) => `
+            <div class="flex gap-3 items-start">
+              <div class="step-num">${i+1}</div>
+              <p class="text-sm leading-relaxed pt-0.5" style="color: var(--espresso)">${step}</p>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function starSVG() {
+    return `<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.9 6.9L22 10l-5.5 4.8L18.2 22 12 18.3 5.8 22l1.7-7.2L2 10l7.1-1.1L12 2z"/></svg>`;
+  }
+  function renderStars(rating, readonly = false) {
+    const cls = readonly ? 'star-rating readonly' : 'star-rating';
+    let html = `<div class="${cls}" data-current="${rating || 0}">`;
+    for (let i = 1; i <= 5; i++) {
+      html += `<span class="star ${i <= rating ? 'active' : ''}" data-value="${i}">${starSVG()}</span>`;
+    }
+    html += `</div>`;
+    return html;
+  }
+
+  let activePopover = null;
+  const popoverRoot = document.getElementById('popoverRoot');
+
+  function openNotesPopover(brewId, anchorEl) {
+    closePopover();
+    const brews = JSON.parse(localStorage.getItem('brewbook') || '[]');
+    const brew = brews.find(b => b.id === brewId);
+    if (!brew) return;
+
+    const rating = brew.rating || 0;
+    const notes = brew.notes || '';
+
+    const backdrop = document.createElement('div');
+    backdrop.className = 'popover-backdrop';
+    backdrop.addEventListener('click', closePopover);
+
+    const pop = document.createElement('div');
+    pop.className = 'popover';
+    pop.innerHTML = `
+      <button class="pop-close" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <p class="text-xs uppercase tracking-wider font-semibold mb-2 pr-6" style="color: var(--coffee-muted)">Tasting notes</p>
+      <p class="text-sm font-semibold mb-3 truncate pr-6" style="color: var(--espresso)">${brew.data.coffeeName}</p>
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-[11px] uppercase tracking-wider font-semibold" style="color: var(--coffee-muted)">Your rating</p>
+        <button class="btn-clear-rating ${!rating ? 'hidden' : ''}" type="button">clear</button>
+      </div>
+      <div id="popStars" class="mb-3">${renderStars(rating)}</div>
+      <label class="block text-[11px] uppercase tracking-wider font-semibold mb-1.5" style="color: var(--coffee-muted)">Notes</label>
+      <textarea id="popNotes" placeholder="Aroma, body, sweetness, acidity, anything you noticed...">${notes.replace(/</g, '&lt;')}</textarea>
+      <button id="popSave" class="btn-save mt-3">Save notes</button>
+    `;
+
+    popoverRoot.appendChild(backdrop);
+    popoverRoot.appendChild(pop);
+
+    const anchorRect = anchorEl.getBoundingClientRect();
+    const popWidth = 340, popHeight = 360;
+    let top = anchorRect.bottom + window.scrollY + 8;
+    let left = anchorRect.left + window.scrollX + (anchorRect.width / 2) - (popWidth / 2);
+    if (left < 16) left = 16;
+    if (left + popWidth > window.innerWidth - 16) left = window.innerWidth - popWidth - 16;
+    if (anchorRect.bottom + popHeight + 24 > window.innerHeight) {
+      top = anchorRect.top + window.scrollY - popHeight - 8;
+      if (top < 16) top = 16;
+    }
+    pop.style.top = top + 'px';
+    pop.style.left = left + 'px';
+
+    const starsWrap = pop.querySelector('#popStars .star-rating');
+    const stars = starsWrap.querySelectorAll('.star');
+    let currentRating = rating;
+    function updateStarUI(val) {
+      stars.forEach(s => {
+        const v = parseInt(s.dataset.value);
+        s.classList.toggle('active', v <= val);
+      });
+    }
+    stars.forEach(s => {
+      s.addEventListener('mouseenter', () => updateStarUI(parseInt(s.dataset.value)));
+      s.addEventListener('mouseleave', () => updateStarUI(currentRating));
+      s.addEventListener('click', () => { currentRating = parseInt(s.dataset.value); updateStarUI(currentRating); });
+    });
+    pop.querySelector('.btn-clear-rating').addEventListener('click', () => { currentRating = 0; updateStarUI(0); });
+    pop.querySelector('.pop-close').addEventListener('click', closePopover);
+    pop.querySelector('#popSave').addEventListener('click', () => {
+      const newNotes = pop.querySelector('#popNotes').value.trim();
+      updateBrewNotesRating(brewId, newNotes, currentRating);
+      closePopover();
+    });
+    const escHandler = (e) => { if (e.key === 'Escape') { closePopover(); document.removeEventListener('keydown', escHandler); }};
+    document.addEventListener('keydown', escHandler);
+    activePopover = { backdrop, pop };
+    pop.querySelector('#popNotes').focus();
+  }
+
+  function closePopover() {
+    if (activePopover) {
+      activePopover.backdrop.remove();
+      activePopover.pop.remove();
+      activePopover = null;
+    }
+  }
+
+  function updateBrewNotesRating(brewId, notes, rating) {
+    const brews = JSON.parse(localStorage.getItem('brewbook') || '[]');
+    const idx = brews.findIndex(b => b.id === brewId);
+    if (idx === -1) return;
+    brews[idx].notes = notes;
+    brews[idx].rating = rating;
+    localStorage.setItem('brewbook', JSON.stringify(brews));
+    renderBrewList();
+  }
+
+  function saveBrew(data, recipe) {
+    const brews = JSON.parse(localStorage.getItem('brewbook') || '[]');
+    brews.unshift({
+      id: Date.now(), data,
+      recipe: {
+        methodName: recipe.methodInfo.name,
+        ratio: recipe.ratio, temp: recipe.temp, grind: recipe.grind,
+        steps: recipe.steps, method: recipe.method, methodInfo: recipe.methodInfo,
+        dose: recipe.dose, water: recipe.water, roastLabel: recipe.roastLabel,
+        daysSinceRoast: recipe.daysSinceRoast, freshnessNote: recipe.freshnessNote,
+        freshnessClass: recipe.freshnessClass, processLabel: recipe.processLabel,
+        altTier: recipe.altTier, grindInfo: recipe.grindInfo,
+        recommendedMethod: recipe.recommendedMethod,
+        recommendedName: recipe.recommendedName,
+        userOverrode: recipe.userOverrode,
+        oreaBottom: recipe.oreaBottom,
+        flavorProfile: recipe.flavorProfile
+      },
+      notes: '', rating: 0,
+      savedAt: new Date().toISOString()
+    });
+    localStorage.setItem('brewbook', JSON.stringify(brews.slice(0, 50)));
+    renderBrewList();
+  }
+
+  function renderBrewList() {
+    const brews = JSON.parse(localStorage.getItem('brewbook') || '[]');
+    const list = document.getElementById('brewList');
+
+    if (brews.length === 0) {
+      list.innerHTML = `<div id="emptyLog" class="p-10 text-center text-sm" style="color: var(--coffee-muted)">No brews recorded yet. Generate your first recipe above.</div>`;
+      return;
+    }
+
+    list.innerHTML = brews.map(b => {
+      const rating = b.rating || 0;
+      const notes = b.notes || '';
+      const fp = b.recipe.flavorProfile;
+      const starsRow = rating > 0
+        ? `<div class="flex items-center gap-1.5">
+             ${renderStars(rating, true)}
+             <span class="text-[11px] font-semibold" style="color: var(--coffee)">${rating}/5</span>
+           </div>` : '';
+      const notesPreview = notes ? `<p class="notes-preview">"${notes.replace(/</g, '&lt;')}"</p>` : '';
+      const flavorPreview = fp && fp.notes
+        ? `<div class="flex flex-wrap gap-1 mt-1">${fp.notes.slice(0, 4).map(n => `<span class="text-[10px] px-1.5 py-0.5 rounded" style="background: var(--tag-bg); color: var(--coffee)">${n}</span>`).join('')}</div>`
+        : '';
+
+      return `
+        <div class="brew-item p-4 flex items-start justify-between gap-3" data-id="${b.id}">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1 flex-wrap">
+              <h4 class="font-semibold truncate" style="color: var(--espresso)">${b.data.coffeeName}</h4>
+              <span class="method-chip">${b.recipe.methodName}</span>
+              ${b.recipe.grindInfo ? `<span class="grinder-pill">${b.recipe.grindInfo.grinderName.replace('Timemore ', '')} · ${b.recipe.grindInfo.setting}</span>` : ''}
+            </div>
+            <div class="flex items-center gap-3 text-xs flex-wrap mb-1" style="color: var(--coffee-muted)">
+              <span>${b.data.country}</span><span>·</span>
+              <span>${b.recipe.processLabel}</span><span>·</span>
+              <span>${b.data.altitude}m</span><span>·</span>
+              <span class="font-medium" style="color: var(--coffee)">1:${b.recipe.ratio} · ${b.recipe.temp}°C</span><span>·</span>
+              <span>Roasted ${new Date(b.data.roastDate).toLocaleDateString('en-US', {month:'short', day:'numeric'})}</span>
+            </div>
+            ${starsRow}
+            ${flavorPreview}
+            ${notesPreview}
+          </div>
+          <div class="flex items-center gap-1 flex-shrink-0">
+            <button class="notes-btn ${notes ? 'has-notes' : ''}" data-id="${b.id}" title="Add notes & rating">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              ${notes ? 'Notes' : 'Add note'}
+            </button>
+            <button class="delete-btn p-1.5" data-id="${b.id}" title="Delete" style="color: var(--rust)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    list.querySelectorAll('.brew-item').forEach(el => {
+      el.addEventListener('click', (e) => {
+        if (e.target.closest('.delete-btn')) return;
+        if (e.target.closest('.notes-btn')) return;
+        const id = parseInt(el.dataset.id);
+        const brew = brews.find(b => b.id === id);
+        if (brew) renderRecipe(brew.recipe, brew.data);
+        window.scrollTo({ top: document.getElementById('recipeCard').offsetTop - 20, behavior: 'smooth' });
+      });
+    });
+    list.querySelectorAll('.notes-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openNotesPopover(parseInt(btn.dataset.id), btn);
+      });
+    });
+    list.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = parseInt(btn.dataset.id);
+        const remaining = JSON.parse(localStorage.getItem('brewbook') || '[]').filter(b => b.id !== id);
+        localStorage.setItem('brewbook', JSON.stringify(remaining));
+        renderBrewList();
+      });
+    });
+  }
+
+  document.getElementById('clearAllBtn').addEventListener('click', () => {
+    if (confirm('Clear your entire brew log?')) {
+      localStorage.removeItem('brewbook');
+      closePopover();
+      renderBrewList();
+    }
+  });
+
+  window.addEventListener('resize', closePopover);
+
+  renderBrewList();
+</script>
+</body>
+</html>
+
