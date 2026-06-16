@@ -121,8 +121,6 @@
     box-shadow: 0 8px 30px rgba(42, 24, 16, 0.35);
   }
   .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-  /* Reset / clear button */
   .btn-ghost {
     background: transparent;
     color: var(--coffee);
@@ -146,15 +144,9 @@
     transform: translateY(-1px);
   }
   .btn-ghost:active { transform: translateY(0); }
-  .btn-ghost svg {
-    transition: transform 0.4s ease;
-  }
-  .btn-ghost:hover svg {
-    transform: rotate(-90deg);
-  }
-  .btn-ghost.resetting svg {
-    animation: spinReset 0.6s ease;
-  }
+  .btn-ghost svg { transition: transform 0.4s ease; }
+  .btn-ghost:hover svg { transform: rotate(-90deg); }
+  .btn-ghost.resetting svg { animation: spinReset 0.6s ease; }
   @keyframes spinReset {
     0% { transform: rotate(0); }
     100% { transform: rotate(-360deg); }
@@ -169,7 +161,6 @@
     border-color: rgba(74,222,128,0.35);
     color: #4ade80;
   }
-
   .method-chip {
     padding: 0.4rem 0.9rem;
     border-radius: 999px;
@@ -546,6 +537,18 @@
     border-radius: 6px;
     font-style: italic;
   }
+  .feature-chip {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.3rem 0.65rem;
+    background: var(--tag-bg);
+    color: var(--coffee);
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    margin-right: 0.35rem;
+    margin-top: 0.35rem;
+    border: 1px solid var(--stat-border);
+  }
 </style>
 </head>
 <body class="relative">
@@ -580,12 +583,12 @@
 
   <section class="grid md:grid-cols-5 gap-8 items-center mb-14">
     <div class="md:col-span-3">
-      <span class="method-chip mb-4 inline-block">Recipe Generator · v4.1</span>
+      <span class="method-chip mb-4 inline-block">Recipe Generator · v4.2</span>
       <h2 class="text-5xl md:text-6xl font-semibold leading-[1.05] mb-5" style="color: var(--espresso)">
         Tell me about your <em class="not-italic" style="color: var(--amber)">coffee</em>,<br/>I'll craft the brew.
       </h2>
       <p class="text-lg max-w-xl leading-relaxed" style="color: var(--coffee)">
-        Type your bean's name and our engine identifies its origin, variety, and typical flavor profile. Then pick your brewer or let us recommend, and get the exact grind setting, ratio, and water temperature.
+        Type your bean's name and our engine identifies its origin, variety, and typical flavor profile. Then pick your brewer — including the Graycano — or let us recommend, and get the exact grind setting, ratio, and water temperature.
       </p>
     </div>
     <div class="md:col-span-2">
@@ -681,6 +684,7 @@
             <option value="v60-switch">V60 Switch</option>
             <option value="hario-suiren">Hario Suiren</option>
             <option value="orea-v4">Orea V4</option>
+            <option value="graycano">Graycano Dripper</option>
             <option value="aeropress">Aeropress</option>
           </select>
           <p class="text-[11px] mt-1.5 italic" style="color: var(--coffee-muted)">
@@ -779,34 +783,32 @@
     }
   });
 
-  // ============================================================
-  // ============ COFFEE FLAVOR PROFILE DATABASE ================
-  // ============================================================
+  // ============ COFFEE FLAVOR PROFILE DATABASE ============
   const COFFEE_COUNTRY = {
-    'ethiopia':   { country: 'Ethiopia',   aromas: ['jasmine','bergamot','lemon blossom'], acidity: 'bright, citric', body: 'light to medium, silky', notes: ['lemon','peach','floral','black tea'], sweetness: 'honey-like', finish: 'clean, lingering', desc: 'Ethiopian coffees are celebrated for their aromatic complexity — expect floral top-notes, citrus acidity, and a tea-like delicacy.' },
-    'colombia':   { country: 'Colombia',   aromas: ['caramel','red apple','panela'], acidity: 'balanced, malic', body: 'medium, rounded', notes: ['caramel','red apple','cocoa','stone fruit'], sweetness: 'brown sugar', finish: 'smooth, chocolate', desc: 'Colombian coffees offer a balanced cup with clean sweetness, juicy malic acidity, and caramel-cocoa undertones.' },
-    'kenya':      { country: 'Kenya',      aromas: ['blackcurrant','tomato','grapefruit'], acidity: 'intense, phosphoric', body: 'medium, syrupy', notes: ['blackcurrant','tomato','grapefruit','red wine'], sweetness: 'brown sugar', finish: 'juicy, long', desc: 'Kenyan coffees are famous for their intense blackcurrant and tomato-like acidity, with a juicy, winey body.' },
-    'panama':     { country: 'Panama',     aromas: ['jasmine','tropical fruit','honey'], acidity: 'delicate, citric', body: 'light to medium, tea-like', notes: ['jasmine','mango','papaya','bergamot'], sweetness: 'honey, floral', finish: 'elegant, long', desc: 'Panamanian coffees, especially Geishas, are among the most prized — expect jasmine florals, tropical fruits, and a delicate tea-like body.' },
-    'costa rica': { country: 'Costa Rica', aromas: ['honey','apricot','vanilla'], acidity: 'bright, citric', body: 'medium, creamy', notes: ['honey','apricot','vanilla','brown sugar'], sweetness: 'honey, caramel', finish: 'clean, sweet', desc: 'Costa Rican coffees are clean and honey-sweet, with stone-fruit acidity and a creamy body.' },
-    'brazil':     { country: 'Brazil',     aromas: ['peanut','chocolate','caramel'], acidity: 'low, soft', body: 'heavy, creamy', notes: ['dark chocolate','peanut','caramel','praline'], sweetness: 'caramel', finish: 'lingering, nutty', desc: 'Brazilian coffees are low-acid, heavy-bodied, with nutty-chocolate notes and pronounced caramel sweetness.' },
-    'guatemala':  { country: 'Guatemala',  aromas: ['cocoa','spice','orange'], acidity: 'balanced, malic', body: 'medium-full, syrupy', notes: ['dark chocolate','orange','cinnamon','caramel'], sweetness: 'brown sugar', finish: 'long, spiced', desc: 'Guatemalan coffees combine cocoa depth with bright citrus acidity and warming spice notes.' },
-    'rwanda':     { country: 'Rwanda',     aromas: ['red berry','floral','citrus'], acidity: 'bright, malic', body: 'medium, silky', notes: ['red currant','orange blossom','plum','brown sugar'], sweetness: 'honey', finish: 'clean, fruity', desc: 'Rwandan coffees deliver juicy red-fruit acidity, floral aromatics, and a silky body.' },
-    'burundi':    { country: 'Burundi',    aromas: ['red fruit','fig','black tea'], acidity: 'bright, citric', body: 'medium, round', notes: ['red berry','fig','black tea','cocoa'], sweetness: 'brown sugar', finish: 'clean, tea-like', desc: 'Burundian coffees balance red-fruit acidity with tea-like delicacy and fig sweetness.' },
-    'indonesia':  { country: 'Indonesia',  aromas: ['earth','herbal','dark chocolate'], acidity: 'low, muted', body: 'heavy, syrupy', notes: ['dark chocolate','cedar','earth','tobacco'], sweetness: 'molasses', finish: 'long, earthy', desc: 'Indonesian coffees (especially Sumatra) are known for earthy, herbal depth with heavy body and dark chocolate notes.' },
-    'yemen':      { country: 'Yemen',      aromas: ['dried fruit','wine','spice'], acidity: 'moderate, winey', body: 'medium-full, syrupy', notes: ['dried apricot','red wine','cardamom','cocoa'], sweetness: 'dates, molasses', finish: 'complex, spicy', desc: 'Yemeni coffees are ancient and wild — dried-fruit sweetness, winey acidity, and warming spice notes.' },
-    'honduras':   { country: 'Honduras',   aromas: ['caramel','stone fruit','nut'], acidity: 'balanced, malic', body: 'medium, creamy', notes: ['caramel','peach','almond','cocoa'], sweetness: 'brown sugar', finish: 'smooth', desc: 'Honduran coffees are well-balanced with stone-fruit sweetness, nutty undertones, and caramel finish.' },
-    'el salvador':{ country: 'El Salvador',aromas: ['honey','stone fruit','chocolate'], acidity: 'balanced, citric', body: 'medium, silky', notes: ['honey','plum','milk chocolate','orange'], sweetness: 'honey, caramel', finish: 'clean, sweet', desc: 'Salvadoran coffees combine honey sweetness with stone fruit and milk chocolate notes.' },
-    'peru':       { country: 'Peru',       aromas: ['cocoa','nut','citrus'], acidity: 'moderate, balanced', body: 'medium', notes: ['cocoa','almond','orange','brown sugar'], sweetness: 'brown sugar', finish: 'clean, nutty', desc: 'Peruvian coffees are balanced and nutty, with mild citrus and cocoa notes.' },
-    'tanzania':   { country: 'Tanzania',   aromas: ['berry','wine','spice'], acidity: 'bright, winey', body: 'medium, juicy', notes: ['blackberry','red wine','cocoa','clove'], sweetness: 'brown sugar', finish: 'long, winey', desc: 'Tanzanian coffees (especially Peaberry) show berry fruit, winey acidity, and spiced finish.' },
-    'mexico':     { country: 'Mexico',     aromas: ['chocolate','nut','caramel'], acidity: 'moderate, soft', body: 'medium, creamy', notes: ['milk chocolate','almond','caramel','brown sugar'], sweetness: 'caramel', finish: 'clean', desc: 'Mexican coffees are smooth, nutty-chocolate with soft acidity and caramel sweetness.' },
-    'papua':      { country: 'Papua New Guinea', aromas: ['tropical fruit','herbal','cocoa'], acidity: 'bright, citric', body: 'medium-full', notes: ['mango','herbs','dark chocolate','brown sugar'], sweetness: 'brown sugar', finish: 'long, herbal', desc: 'PNG coffees combine tropical fruit brightness with herbal complexity and cocoa depth.' },
-    'india':      { country: 'India',      aromas: ['spice','nut','dark chocolate'], acidity: 'low, soft', body: 'full, syrupy', notes: ['cardamom','pepper','dark chocolate','nuts'], sweetness: 'molasses', finish: 'spiced', desc: 'Indian coffees are full-bodied and spiced, with low acidity and deep chocolate notes.' },
-    'uganda':     { country: 'Uganda',     aromas: ['berry','chocolate','wine'], acidity: 'moderate, winey', body: 'medium-full', notes: ['red berry','dark chocolate','prune','wine'], sweetness: 'brown sugar', finish: 'winey', desc: 'Ugandan coffees combine berry fruit with chocolate depth and winey complexity.' },
-    'ecuador':    { country: 'Ecuador',    aromas: ['floral','citrus','cocoa'], acidity: 'bright, citric', body: 'medium, silky', notes: ['orange blossom','lemon','cocoa','caramel'], sweetness: 'honey', finish: 'clean', desc: 'Ecuadorian coffees show floral-citrus brightness with cocoa undertones.' },
-    'jamaica':    { country: 'Jamaica',    aromas: ['floral','nut','sweet herb'], acidity: 'bright, clean', body: 'medium, silky', notes: ['jasmine','almond','sweet herbs','citrus'], sweetness: 'clean', finish: 'elegant', desc: 'Jamaican Blue Mountain is famous for its clean, balanced, elegant cup.' },
-    'vietnam':    { country: 'Vietnam',    aromas: ['chocolate','nut','earth'], acidity: 'low', body: 'heavy', notes: ['dark chocolate','peanut','earth','smoke'], sweetness: 'mild', finish: 'bold', desc: 'Vietnamese coffees are bold, chocolatey, and full-bodied — often roasted dark.' },
-    'sumatra':    { country: 'Indonesia',  aromas: ['earth','herbal','dark chocolate'], acidity: 'low, muted', body: 'heavy, syrupy', notes: ['dark chocolate','cedar','earth','tobacco'], sweetness: 'molasses', finish: 'long, earthy', desc: 'Sumatran coffees are earthy, herbal, and full-bodied with dark chocolate depth.' },
-    'java':       { country: 'Indonesia',  aromas: ['malt','earth','dark chocolate'], acidity: 'low', body: 'heavy, syrupy', notes: ['malt','dark chocolate','earth','spice'], sweetness: 'molasses', finish: 'long, rustic', desc: 'Java coffees are rustic and heavy-bodied with malt and earth notes.' }
+    'ethiopia':   { country: 'Ethiopia',   aromas: ['jasmine','bergamot','lemon blossom'], acidity: 'bright, citric', body: 'light to medium, silky', notes: ['lemon','peach','floral','black tea'], desc: 'Ethiopian coffees are celebrated for their aromatic complexity — expect floral top-notes, citrus acidity, and a tea-like delicacy.' },
+    'colombia':   { country: 'Colombia',   aromas: ['caramel','red apple','panela'], acidity: 'balanced, malic', body: 'medium, rounded', notes: ['caramel','red apple','cocoa','stone fruit'], desc: 'Colombian coffees offer a balanced cup with clean sweetness, juicy malic acidity, and caramel-cocoa undertones.' },
+    'kenya':      { country: 'Kenya',      aromas: ['blackcurrant','tomato','grapefruit'], acidity: 'intense, phosphoric', body: 'medium, syrupy', notes: ['blackcurrant','tomato','grapefruit','red wine'], desc: 'Kenyan coffees are famous for their intense blackcurrant and tomato-like acidity, with a juicy, winey body.' },
+    'panama':     { country: 'Panama',     aromas: ['jasmine','tropical fruit','honey'], acidity: 'delicate, citric', body: 'light to medium, tea-like', notes: ['jasmine','mango','papaya','bergamot'], desc: 'Panamanian coffees, especially Geishas, are among the most prized — expect jasmine florals, tropical fruits, and a delicate tea-like body.' },
+    'costa rica': { country: 'Costa Rica', aromas: ['honey','apricot','vanilla'], acidity: 'bright, citric', body: 'medium, creamy', notes: ['honey','apricot','vanilla','brown sugar'], desc: 'Costa Rican coffees are clean and honey-sweet, with stone-fruit acidity and a creamy body.' },
+    'brazil':     { country: 'Brazil',     aromas: ['peanut','chocolate','caramel'], acidity: 'low, soft', body: 'heavy, creamy', notes: ['dark chocolate','peanut','caramel','praline'], desc: 'Brazilian coffees are low-acid, heavy-bodied, with nutty-chocolate notes and pronounced caramel sweetness.' },
+    'guatemala':  { country: 'Guatemala',  aromas: ['cocoa','spice','orange'], acidity: 'balanced, malic', body: 'medium-full, syrupy', notes: ['dark chocolate','orange','cinnamon','caramel'], desc: 'Guatemalan coffees combine cocoa depth with bright citrus acidity and warming spice notes.' },
+    'rwanda':     { country: 'Rwanda',     aromas: ['red berry','floral','citrus'], acidity: 'bright, malic', body: 'medium, silky', notes: ['red currant','orange blossom','plum','brown sugar'], desc: 'Rwandan coffees deliver juicy red-fruit acidity, floral aromatics, and a silky body.' },
+    'burundi':    { country: 'Burundi',    aromas: ['red fruit','fig','black tea'], acidity: 'bright, citric', body: 'medium, round', notes: ['red berry','fig','black tea','cocoa'], desc: 'Burundian coffees balance red-fruit acidity with tea-like delicacy and fig sweetness.' },
+    'indonesia':  { country: 'Indonesia',  aromas: ['earth','herbal','dark chocolate'], acidity: 'low, muted', body: 'heavy, syrupy', notes: ['dark chocolate','cedar','earth','tobacco'], desc: 'Indonesian coffees (especially Sumatra) are known for earthy, herbal depth with heavy body and dark chocolate notes.' },
+    'yemen':      { country: 'Yemen',      aromas: ['dried fruit','wine','spice'], acidity: 'moderate, winey', body: 'medium-full, syrupy', notes: ['dried apricot','red wine','cardamom','cocoa'], desc: 'Yemeni coffees are ancient and wild — dried-fruit sweetness, winey acidity, and warming spice notes.' },
+    'honduras':   { country: 'Honduras',   aromas: ['caramel','stone fruit','nut'], acidity: 'balanced, malic', body: 'medium, creamy', notes: ['caramel','peach','almond','cocoa'], desc: 'Honduran coffees are well-balanced with stone-fruit sweetness, nutty undertones, and caramel finish.' },
+    'el salvador':{ country: 'El Salvador',aromas: ['honey','stone fruit','chocolate'], acidity: 'balanced, citric', body: 'medium, silky', notes: ['honey','plum','milk chocolate','orange'], desc: 'Salvadoran coffees combine honey sweetness with stone fruit and milk chocolate notes.' },
+    'peru':       { country: 'Peru',       aromas: ['cocoa','nut','citrus'], acidity: 'moderate, balanced', body: 'medium', notes: ['cocoa','almond','orange','brown sugar'], desc: 'Peruvian coffees are balanced and nutty, with mild citrus and cocoa notes.' },
+    'tanzania':   { country: 'Tanzania',   aromas: ['berry','wine','spice'], acidity: 'bright, winey', body: 'medium, juicy', notes: ['blackberry','red wine','cocoa','clove'], desc: 'Tanzanian coffees (especially Peaberry) show berry fruit, winey acidity, and spiced finish.' },
+    'mexico':     { country: 'Mexico',     aromas: ['chocolate','nut','caramel'], acidity: 'moderate, soft', body: 'medium, creamy', notes: ['milk chocolate','almond','caramel','brown sugar'], desc: 'Mexican coffees are smooth, nutty-chocolate with soft acidity and caramel sweetness.' },
+    'papua':      { country: 'Papua New Guinea', aromas: ['tropical fruit','herbal','cocoa'], acidity: 'bright, citric', body: 'medium-full', notes: ['mango','herbs','dark chocolate','brown sugar'], desc: 'PNG coffees combine tropical fruit brightness with herbal complexity and cocoa depth.' },
+    'india':      { country: 'India',      aromas: ['spice','nut','dark chocolate'], acidity: 'low, soft', body: 'full, syrupy', notes: ['cardamom','pepper','dark chocolate','nuts'], desc: 'Indian coffees are full-bodied and spiced, with low acidity and deep chocolate notes.' },
+    'uganda':     { country: 'Uganda',     aromas: ['berry','chocolate','wine'], acidity: 'moderate, winey', body: 'medium-full', notes: ['red berry','dark chocolate','prune','wine'], desc: 'Ugandan coffees combine berry fruit with chocolate depth and winey complexity.' },
+    'ecuador':    { country: 'Ecuador',    aromas: ['floral','citrus','cocoa'], acidity: 'bright, citric', body: 'medium, silky', notes: ['orange blossom','lemon','cocoa','caramel'], desc: 'Ecuadorian coffees show floral-citrus brightness with cocoa undertones.' },
+    'jamaica':    { country: 'Jamaica',    aromas: ['floral','nut','sweet herb'], acidity: 'bright, clean', body: 'medium, silky', notes: ['jasmine','almond','sweet herbs','citrus'], desc: 'Jamaican Blue Mountain is famous for its clean, balanced, elegant cup.' },
+    'vietnam':    { country: 'Vietnam',    aromas: ['chocolate','nut','earth'], acidity: 'low', body: 'heavy', notes: ['dark chocolate','peanut','earth','smoke'], desc: 'Vietnamese coffees are bold, chocolatey, and full-bodied — often roasted dark.' },
+    'sumatra':    { country: 'Indonesia',  aromas: ['earth','herbal','dark chocolate'], acidity: 'low, muted', body: 'heavy, syrupy', notes: ['dark chocolate','cedar','earth','tobacco'], desc: 'Sumatran coffees are earthy, herbal, and full-bodied with dark chocolate depth.' },
+    'java':       { country: 'Indonesia',  aromas: ['malt','earth','dark chocolate'], acidity: 'low', body: 'heavy, syrupy', notes: ['malt','dark chocolate','earth','spice'], desc: 'Java coffees are rustic and heavy-bodied with malt and earth notes.' }
   };
 
   const COFFEE_REGION = {
@@ -853,19 +855,19 @@
   };
 
   const COFFEE_FARM = {
-    'esmeralda':      { farm: 'Hacienda La Esmeralda', desc: 'Hacienda La Esmeralda in Panama is legendary for its Geisha lots — consistently among the world\'s most expensive and celebrated coffees. Expect jasmine florals, bergamot, and tropical fruit with tea-like elegance.', aromas: ['jasmine','bergamot','tropical'], notes: ['jasmine','bergamot','mango','papaya','honey'], body: 'light, tea-like', acidity: 'delicate, floral-citric' },
-    'gesha village':  { farm: 'Gesha Village', desc: 'Gesha Village in Ethiopia\'s Bench Maji zone grows the original Geisha variety in its ancestral home. Expect intense florals, tropical fruit, and tea-like elegance.', aromas: ['jasmine','tropical fruit','bergamot'], notes: ['jasmine','mango','papaya','bergamot','honey'], body: 'light to medium, silky', acidity: 'delicate, floral-citric' },
-    'ninety plus':    { farm: 'Ninety Plus', desc: 'Ninety Plus Gesha Estates produces some of the world\'s most exclusive coffees — intense florals, tropical fruit, and extraordinary complexity.', aromas: ['jasmine','tropical','berry'], notes: ['jasmine','tropical fruit','berry','honey','bergamot'], body: 'light to medium', acidity: 'delicate, complex' },
-    'cerro azul':     { farm: 'Cerro Azul', desc: 'Cerro Azul in Colombia\'s Valle del Cauca is known for exceptional Geisha and Pink Bourbon lots — bright, floral, and juicy.', aromas: ['floral','tropical','stone fruit'], notes: ['jasmine','mango','peach','honey'], body: 'medium, silky', acidity: 'bright, citric' },
+    'esmeralda':      { farm: 'Hacienda La Esmeralda', desc: 'Hacienda La Esmeralda in Panama is legendary for its Geisha lots — consistently among the world\'s most expensive and celebrated coffees.', aromas: ['jasmine','bergamot','tropical'], notes: ['jasmine','bergamot','mango','papaya','honey'], body: 'light, tea-like', acidity: 'delicate, floral-citric' },
+    'gesha village':  { farm: 'Gesha Village', desc: 'Gesha Village in Ethiopia\'s Bench Maji zone grows the original Geisha variety in its ancestral home.', aromas: ['jasmine','tropical fruit','bergamot'], notes: ['jasmine','mango','papaya','bergamot','honey'], body: 'light to medium, silky', acidity: 'delicate, floral-citric' },
+    'ninety plus':    { farm: 'Ninety Plus', desc: 'Ninety Plus Gesha Estates produces some of the world\'s most exclusive coffees.', aromas: ['jasmine','tropical','berry'], notes: ['jasmine','tropical fruit','berry','honey','bergamot'], body: 'light to medium', acidity: 'delicate, complex' },
+    'cerro azul':     { farm: 'Cerro Azul', desc: 'Cerro Azul in Colombia\'s Valle del Cauca is known for exceptional Geisha and Pink Bourbon lots.', aromas: ['floral','tropical','stone fruit'], notes: ['jasmine','mango','peach','honey'], body: 'medium, silky', acidity: 'bright, citric' },
     'monteblanco':    { farm: 'Finca Monteblanco', desc: 'Finca Monteblanco in Huila, Colombia is famous for experimental processes and vibrant Pink Bourbon lots.', aromas: ['tropical','floral','stone fruit'], notes: ['tropical fruit','jasmine','peach','honey'], body: 'medium, juicy', acidity: 'bright' },
-    'el paraíso':     { farm: 'El Paraíso', desc: 'Finca El Paraíso in Cauca, Colombia, Diego Bermudez\'s farm, known for experimental fermentation and intense fruit-forward profiles.', aromas: ['tropical','berry','floral'], notes: ['tropical fruit','berry','floral','wine'], body: 'medium, juicy', acidity: 'bright, winey' },
+    'el paraíso':     { farm: 'El Paraíso', desc: 'Finca El Paraíso in Cauca, Colombia — Diego Bermudez\'s farm, known for experimental fermentation.', aromas: ['tropical','berry','floral'], notes: ['tropical fruit','berry','floral','wine'], body: 'medium, juicy', acidity: 'bright, winey' },
     'la esperanza':   { farm: 'La Esperanza', desc: 'Hacienda La Esperanza in Colombia produces complex, fruity coffees with experimental processing.', aromas: ['tropical','berry','wine'], notes: ['tropical fruit','berry','red wine','honey'], body: 'medium, juicy', acidity: 'bright, winey' },
-    'hambela':        { farm: 'Hambela', desc: 'Hambela Estate in Guji, Ethiopia is renowned for its vibrant natural-processed coffees with intense berry and floral notes.', aromas: ['berry','floral','stone fruit'], notes: ['blueberry','strawberry','jasmine','peach'], body: 'medium, juicy', acidity: 'bright, winey' },
+    'hambela':        { farm: 'Hambela', desc: 'Hambela Estate in Guji, Ethiopia is renowned for its vibrant natural-processed coffees.', aromas: ['berry','floral','stone fruit'], notes: ['blueberry','strawberry','jasmine','peach'], body: 'medium, juicy', acidity: 'bright, winey' },
     'daterra':        { farm: 'Daterra', desc: 'Daterra in Brazil is known for innovative lots and balanced, chocolatey cups.', aromas: ['chocolate','nut','caramel'], notes: ['milk chocolate','almond','caramel','praline'], body: 'medium-full', acidity: 'low, balanced' },
     'santa felicia':  { farm: 'Santa Felicia', desc: 'Finca Santa Felicia in Guatemala produces balanced cups with chocolate and citrus.', aromas: ['chocolate','citrus','spice'], notes: ['dark chocolate','orange','cinnamon','caramel'], body: 'medium-full', acidity: 'balanced' },
     'kilimanjaro':    { farm: 'Kilimanjaro', desc: 'Coffees from Kilimanjaro, Tanzania show berry fruit and winey complexity.', aromas: ['berry','wine','spice'], notes: ['berry','red wine','spice','brown sugar'], body: 'medium, winey', acidity: 'winey' },
-    'kainamui':       { farm: 'Kainamui', desc: 'Kainamui cooperative in Kenya\'s Kirinyaga region produces intense, juicy cups with blackcurrant and citrus.', aromas: ['blackcurrant','citrus','berry'], notes: ['blackcurrant','grapefruit','red berry','brown sugar'], body: 'medium, juicy', acidity: 'intense, phosphoric' },
-    'othaya':         { farm: 'Othaya', desc: 'Othaya cooperative in Kenya\'s Nyeri region is famous for intense, winey cups with blackcurrant and tomato notes.', aromas: ['blackcurrant','tomato','citrus'], notes: ['blackcurrant','tomato','grapefruit','red wine'], body: 'medium, syrupy', acidity: 'intense, phosphoric' },
+    'kainamui':       { farm: 'Kainamui', desc: 'Kainamui cooperative in Kenya\'s Kirinyaga region produces intense, juicy cups.', aromas: ['blackcurrant','citrus','berry'], notes: ['blackcurrant','grapefruit','red berry','brown sugar'], body: 'medium, juicy', acidity: 'intense, phosphoric' },
+    'othaya':         { farm: 'Othaya', desc: 'Othaya cooperative in Kenya\'s Nyeri region is famous for intense, winey cups.', aromas: ['blackcurrant','tomato','citrus'], notes: ['blackcurrant','tomato','grapefruit','red wine'], body: 'medium, syrupy', acidity: 'intense, phosphoric' },
     'huye':           { farm: 'Huye Mountain', desc: 'Huye Mountain in Rwanda produces vibrant cups with red fruit and floral notes.', aromas: ['red berry','floral','citrus'], notes: ['red currant','orange blossom','plum','brown sugar'], body: 'medium, silky', acidity: 'bright, malic' }
   };
 
@@ -873,7 +875,6 @@
     if (!name || name.trim().length < 2) return null;
     const normalized = name.toLowerCase();
     const tokens = normalized.split(/[\s,()'"\-]+/).filter(t => t.length > 1);
-
     const matches = { variety: null, farm: null, region: null, country: null };
     const scores = { variety: 0, farm: 0, region: 0, country: 0 };
 
@@ -889,8 +890,7 @@
       if (normalized.includes(key)) {
         const score = tokens.filter(t => key.includes(t) || t === key).length;
         if (!matches.region || score > scores.region) {
-          matches.region = data;
-          scores.region = score || 1;
+          matches.region = data; scores.region = score || 1;
         }
       }
     }
@@ -898,8 +898,7 @@
       if (normalized.includes(key)) {
         const score = tokens.filter(t => key.includes(t) || t === key).length;
         if (!matches.variety || score > scores.variety) {
-          matches.variety = data;
-          scores.variety = score || 1;
+          matches.variety = data; scores.variety = score || 1;
         }
       }
     }
@@ -907,8 +906,7 @@
       if (normalized.includes(key)) {
         const score = tokens.filter(t => key.includes(t) || t === key).length;
         if (!matches.farm || score > scores.farm) {
-          matches.farm = data;
-          scores.farm = score || 1;
+          matches.farm = data; scores.farm = score || 1;
         }
       }
     }
@@ -916,17 +914,14 @@
     const sources = [matches.country, matches.region, matches.farm, matches.variety].filter(Boolean);
     if (sources.length === 0) return null;
 
-    const allNotes = [];
-    const seen = new Set();
+    const allNotes = [], seen = new Set();
     [matches.variety, matches.farm, matches.region, matches.country].forEach(s => {
       if (s && s.notes) s.notes.forEach(n => {
         const k = n.toLowerCase();
         if (!seen.has(k)) { seen.add(k); allNotes.push(n); }
       });
     });
-
-    const allAromas = [];
-    const aromasSeen = new Set();
+    const allAromas = [], aromasSeen = new Set();
     [matches.variety, matches.farm, matches.region, matches.country].forEach(s => {
       if (s && s.aromas) s.aromas.forEach(n => {
         const k = n.toLowerCase();
@@ -934,14 +929,12 @@
       });
     });
 
-    const desc = matches.variety?.desc || matches.farm?.desc || matches.region?.desc || matches.country?.desc;
-    const acidity = matches.variety?.acidity || matches.farm?.acidity || matches.region?.acidity || matches.country?.acidity;
-    const body = matches.variety?.body || matches.farm?.body || matches.region?.body || matches.country?.body;
-
     return {
       notes: allNotes.slice(0, 7),
       aromas: allAromas.slice(0, 4),
-      acidity, body, desc,
+      acidity: matches.variety?.acidity || matches.farm?.acidity || matches.region?.acidity || matches.country?.acidity,
+      body: matches.variety?.body || matches.farm?.body || matches.region?.body || matches.country?.body,
+      desc: matches.variety?.desc || matches.farm?.desc || matches.region?.desc || matches.country?.desc,
       matches: {
         variety: matches.variety?.variety || null,
         farm: matches.farm?.farm || null,
@@ -962,13 +955,11 @@
     const name = coffeeNameInput.value;
     const country = countryInput.value;
     const profile = analyzeCoffeeName(name, country);
-
     if (!profile) {
       tasteHint.classList.remove('visible');
       tasteHint.innerHTML = '';
       return;
     }
-
     const sources = [];
     if (profile.matches.variety) sources.push(`variety: <b>${profile.matches.variety}</b>`);
     if (profile.matches.farm) sources.push(`farm: <b>${profile.matches.farm}</b>`);
@@ -989,48 +980,29 @@
     tasteHint.classList.add('visible');
   }
 
-  coffeeNameInput.addEventListener('input', () => {
-    clearTimeout(tasteDebounce);
-    tasteDebounce = setTimeout(updateTasteHint, 300);
-  });
-  countryInput.addEventListener('input', () => {
-    clearTimeout(tasteDebounce);
-    tasteDebounce = setTimeout(updateTasteHint, 300);
-  });
+  coffeeNameInput.addEventListener('input', () => { clearTimeout(tasteDebounce); tasteDebounce = setTimeout(updateTasteHint, 300); });
+  countryInput.addEventListener('input', () => { clearTimeout(tasteDebounce); tasteDebounce = setTimeout(updateTasteHint, 300); });
 
-  // ============ CLEAR FORM BUTTON ============
+  // ============ CLEAR FORM ============
   const clearFormBtn = document.getElementById('clearFormBtn');
   const clearBtnText = document.getElementById('clearBtnText');
   const brewForm = document.getElementById('brewForm');
 
   clearFormBtn.addEventListener('click', () => {
-    // Reset all fields
     brewForm.reset();
-
-    // Hide freshness & taste hints
     freshnessHint.classList.add('hidden');
     freshnessHint.textContent = '';
     tasteHint.classList.remove('visible');
     tasteHint.innerHTML = '';
-
-    // Hide recommendation hint
     document.getElementById('recHint').classList.add('hidden');
-
-    // Animate the button icon and show confirmation
     clearFormBtn.classList.add('resetting');
     clearBtnText.textContent = 'Cleared';
     clearFormBtn.classList.add('flash-ok');
-
-    setTimeout(() => {
-      clearFormBtn.classList.remove('resetting');
-    }, 600);
-
+    setTimeout(() => clearFormBtn.classList.remove('resetting'), 600);
     setTimeout(() => {
       clearFormBtn.classList.remove('flash-ok');
       clearBtnText.textContent = 'Clear';
     }, 1400);
-
-    // Return focus to the coffee name field for quick re-entry
     coffeeNameInput.focus();
   });
 
@@ -1040,27 +1012,37 @@
       name: 'V60 Switch',
       tagline: 'Hybrid immersion & percolation',
       desc: 'The V60 Switch combines the clarity of pour-over with the body of immersion brewing. Ideal for highlighting delicate florals and bright acidity in high-altitude washed coffees.',
-      icon: '☕', category: 'v60', specs: null
+      icon: '☕', category: 'v60', specs: null, features: []
     },
     'hario-suiren': {
       name: 'Hario Suiren',
       tagline: 'Steep-and-release with mesh filter · VDSU-02',
       desc: 'The Hario Suiren (VDSU-02) is a 2-cup steep-and-release brewer from Japan, built around a heat-resistant Hario glass server with a removable brewing chamber on top. It ships with a <b>reusable stainless steel mesh filter</b> (no paper required) that lets more coffee oils through for a fuller, silkier body. A silicone lever on the side opens and closes the drain valve, letting you steep the coffee for as long as you like before releasing it through the mesh and spiral ribs into the server below. Perfect for naturals and honeys where you want pronounced sweetness, texture, and aromatic depth.',
       icon: '🫖', category: 'steep-release',
-      specs: { 'Capacity': '2 cups · 300 ml', 'Filter': 'Stainless mesh', 'Origin': 'Made in Japan' }
+      specs: { 'Capacity': '2 cups · 300 ml', 'Filter': 'Stainless mesh', 'Origin': 'Made in Japan' },
+      features: []
     },
     'orea-v4': {
       name: 'Orea V4',
       tagline: 'Modular flat-bed brewer with 4 bottoms',
       desc: 'The Orea V4 is a modular flat-bed brewer that ships with <b>4 interchangeable bottom plates</b>, each designed to control flow rate and extraction. The flat bottom and wide drain holes produce an even extraction with sparkling clarity. Choose your bottom based on your bean: faster flow for dense, high-altitude beans with complex aromatics; slower flow for softer, lower-altitude coffees or darker roasts where you want more body.',
       icon: '◉', category: 'pour-over',
-      specs: { 'Capacity': '1-2 cups', 'Bottoms': '4 options', 'Bed': 'Flat' }
+      specs: { 'Capacity': '1-2 cups', 'Bottoms': '4 options', 'Bed': 'Flat' },
+      features: []
+    },
+    'graycano': {
+      name: 'Graycano Dripper',
+      tagline: 'Cast aluminum conical brewer · Brew the Moment',
+      desc: 'The Graycano is a conical dripper with a <b>cast aluminum core</b> engineered for exceptional thermal performance — it retains and distributes heat precisely, unlocking intensified aromas and richer flavors with every brew. The interior features proprietary <b>Lava Ribs</b> that promote a smooth, balanced extraction by activating the coffee bed for brighter, sweeter notes, while <b>Air Pockets</b> beneath the ribs capture rising steam to gently reheat the dripper and sustain coffee bed temperature throughout the brew. Paired with the medium-slow flow <b>GC01 Japanese wood-pulp filter</b>, the Graycano produces a cup that is articulate yet full-flavored — a ritual designed to slow you down.',
+      icon: '🌋', category: 'conical',
+      specs: { 'Core': 'Cast aluminum', 'Filter': 'GC01 conical', 'Server': 'Pourcano 500 ml' },
+      features: ['Lava Ribs', 'Air Pockets', 'Cast aluminum core', 'Silicone base coating', 'Made for Pourcano server']
     },
     'aeropress': {
       name: 'Aeropress',
       tagline: 'Versatile immersion powerhouse',
       desc: 'The Aeropress excels at extracting body and depth. Ideal for lower-altitude coffees, experimental ferments, and darker roasts where a full, syrupy cup is desired.',
-      icon: '⬤', category: 'aeropress', specs: null
+      icon: '⬤', category: 'aeropress', specs: null, features: []
     }
   };
 
@@ -1068,7 +1050,7 @@
     fast:   { name: 'Fast (4 holes)',   desc: 'Four large drain holes for rapid flow. Best for dense, high-altitude beans and light roasts where you want bright acidity and clarity without over-extraction.' },
     medium: { name: 'Medium (2 holes)', desc: 'Two medium holes for balanced flow. The all-rounder — great for medium roasts and most washed coffees. Good extraction with moderate contact time.' },
     slow:   { name: 'Slow (1 hole)',    desc: 'Single small hole for extended contact time. Ideal for naturals, honeys, and darker roasts where you want more body, sweetness, and depth.' },
-    closed: { name: 'Closed (no holes)',desc: 'Fully sealed for full immersion. Use for steep-and-release recipes or when you want maximum body and minimal clarity. Similar to French Press texture.' }
+    closed: { name: 'Closed (no holes)',desc: 'Fully sealed for full immersion. Use for steep-and-release recipes or when you want maximum body and minimal clarity.' }
   };
 
   function recommendOreaBottom(process, altitude, roastLevel) {
@@ -1087,19 +1069,27 @@
     return 'medium';
   }
 
+  // ============ GRINDERS ============
+  // Timemore C3 ESP rotations from zero
   const GRINDER_C3_ESP = {
     name: 'Timemore C3 ESP', unit: 'rotations from zero', unitShort: 'rot.',
-    v60: { light: '1.2.2', lightMedium: '1.4', medium: '1.6', mediumDark: '1.8.2', dark: '2.0.2' },
-    'pour-over': { light: '1.3', lightMedium: '1.5', medium: '1.8', mediumDark: '2.2', dark: '2.7.1' },
+    v60:          { light: '1.2.2', lightMedium: '1.4', medium: '1.6', mediumDark: '1.8.2', dark: '2.0.2' },
+    'pour-over':  { light: '1.3',   lightMedium: '1.5', medium: '1.8', mediumDark: '2.2',   dark: '2.7.1' },
     'steep-release': { light: '1.3.2', lightMedium: '1.6', medium: '1.9', mediumDark: '2.1', dark: '2.4.1' },
-    aeropress: { light: '1.1', lightMedium: '1.5', medium: '1.9', mediumDark: '2.4', dark: '2.8.1' }
+    'conical':    { light: '1.5',   lightMedium: '1.6', medium: '1.8', mediumDark: '2.0',   dark: '2.3' },
+    aeropress:    { light: '1.1',   lightMedium: '1.5', medium: '1.9', mediumDark: '2.4',   dark: '2.8.1' }
   };
+
+  // Timemore S3 ESP clicks from zero (90 total, each click = 0.015 mm)
+  // S3 ESP pour-over band: 50-80 clicks. Graycano uses medium-slow paper so we go
+  // slightly coarser than V60 to compensate for the slower flow.
   const GRINDER_S3_ESP = {
     name: 'Timemore S3 ESP', unit: 'clicks from zero', unitShort: 'clicks', totalClicks: 90,
-    v60: { light: 54, lightMedium: 60, medium: 66, mediumDark: 72, dark: 78 },
-    'pour-over': { light: 52, lightMedium: 58, medium: 65, mediumDark: 72, dark: 80 },
+    v60:          { light: 54, lightMedium: 60, medium: 66, mediumDark: 72, dark: 78 },
+    'pour-over':  { light: 52, lightMedium: 58, medium: 65, mediumDark: 72, dark: 80 },
     'steep-release': { light: 56, lightMedium: 62, medium: 68, mediumDark: 74, dark: 80 },
-    aeropress: { light: 50, lightMedium: 56, medium: 62, mediumDark: 70, dark: 76 }
+    'conical':    { light: 58, lightMedium: 63, medium: 69, mediumDark: 75, dark: 81 },
+    aeropress:    { light: 50, lightMedium: 56, medium: 62, mediumDark: 70, dark: 76 }
   };
 
   const GRIND_LABELS = {
@@ -1122,18 +1112,22 @@
     const isHoney = process === 'honey';
     const isFunky = process === 'anaerobic' || process === 'carbonic' || process === 'co-ferment';
 
-    const scores = { 'v60-switch':0, 'hario-suiren':0, 'orea-v4':0, 'aeropress':0 };
-    if (isHighAlt) { scores['orea-v4'] += 3; scores['v60-switch'] += 2; }
-    if (isMedAlt)  { scores['hario-suiren'] += 2; scores['v60-switch'] += 2; }
+    const scores = { 'v60-switch':0, 'hario-suiren':0, 'orea-v4':0, 'graycano':0, 'aeropress':0 };
+    if (isHighAlt) { scores['orea-v4'] += 3; scores['v60-switch'] += 2; scores['graycano'] += 2; }
+    if (isMedAlt)  { scores['hario-suiren'] += 2; scores['v60-switch'] += 2; scores['graycano'] += 2; }
     if (!isHighAlt && !isMedAlt) { scores['aeropress'] += 3; scores['hario-suiren'] += 1; }
 
-    if (isWashed)  { scores['orea-v4'] += 2; scores['v60-switch'] += 2; }
+    if (isWashed)  { scores['orea-v4'] += 2; scores['v60-switch'] += 2; scores['graycano'] += 3; }
     if (isNatural) { scores['hario-suiren'] += 3; scores['v60-switch'] += 1; }
-    if (isHoney)   { scores['hario-suiren'] += 3; scores['aeropress'] += 1; }
+    if (isHoney)   { scores['hario-suiren'] += 3; scores['aeropress'] += 1; scores['graycano'] += 1; }
     if (isFunky)   { scores['aeropress'] += 3; scores['v60-switch'] += 1; }
 
+    // Graycano's aluminum thermal mass favors light and light-medium roasts
     if (roastLevel === 'light' || roastLevel === 'light-medium') {
-      scores['orea-v4'] += 2; scores['v60-switch'] += 1;
+      scores['orea-v4'] += 2; scores['v60-switch'] += 1; scores['graycano'] += 3;
+    }
+    if (roastLevel === 'medium') {
+      scores['graycano'] += 2;
     }
     if (roastLevel === 'medium-dark' || roastLevel === 'dark') {
       scores['aeropress'] += 2; scores['hario-suiren'] += 1;
@@ -1155,6 +1149,8 @@
     const isNatural = process === 'natural';
     const isHoney = process === 'honey';
 
+    // Graycano's aluminum thermal retention favors slightly lower temps for light roasts
+    // to avoid over-extraction, but keeps high temps for medium+ roasts.
     const roastMap = {
       'light':        { temp: 96, grind: 'medium-fine',    label: 'Light',        roastKey: 'light' },
       'light-medium': { temp: 94, grind: 'medium-fine',    label: 'Light-Medium', roastKey: 'lightMedium' },
@@ -1176,16 +1172,20 @@
     else if (roastLevel === 'medium-dark') ratio = 15;
     else ratio = 14;
 
+    // Graycano: aluminum core retains heat aggressively, so drop temp by 1°C for light roasts
+    // to avoid over-extracting delicate florals. For dark roasts, keep temp (thermal mass helps).
     let temp = roastData.temp;
+    if (bestMethod === 'graycano' && (roastLevel === 'light' || roastLevel === 'light-medium')) {
+      temp -= 1;
+    }
+
     let freshnessNote = '', freshnessClass = 'freshness-peak';
     if (daysSinceRoast < 5) {
       freshnessNote = `Your beans are only ${daysSinceRoast} days old. Let them degas 2–3 more days for best results, or extend the bloom to 60s.`;
-      freshnessClass = 'freshness-fresh';
-      temp -= 1;
+      freshnessClass = 'freshness-fresh'; temp -= 1;
     } else if (daysSinceRoast > 30) {
       freshnessNote = `These beans are ${daysSinceRoast} days post-roast. Grind slightly finer and bump temp by 1°C to compensate for staling.`;
-      freshnessClass = 'freshness-stale';
-      temp += 1;
+      freshnessClass = 'freshness-stale'; temp += 1;
     } else if (daysSinceRoast >= 7 && daysSinceRoast <= 21) {
       freshnessNote = `Perfect window — ${daysSinceRoast} days post-roast, peak flavor and CO₂ balance.`;
       freshnessClass = 'freshness-peak';
@@ -1247,6 +1247,18 @@
         `Pour to <b>${Math.round(water*0.6)}g</b> in concentric circles, steady stream.`,
         `At 1:15, pour remaining water to reach <b>${water}g</b> total. Gentle swirl.`,
         `Target draw-down complete by <b>2:45 – 3:15</b>. Flat bed = even extraction.`
+      ];
+    }
+    if (method === 'graycano') {
+      // Graycano-specific recipe: preheat aluminum core, leverage lava ribs + air pockets
+      // Use a 4:6-style hybrid with the GC01 medium-slow paper
+      return [
+        `Heat water to <b>${temp}°C</b>. Place the GC01 conical filter in the Graycano and rinse with hot water. <b>Crucially, preheat the cast aluminum core</b> thoroughly — this is what unlocks the dripper's thermal magic. Discard rinse water from the Pourcano server.`,
+        `Add <b>${dose}g</b> of ${grind} ground coffee. Give the dripper a gentle shake to level the bed along the conical walls.`,
+        `Start timer. Pour <b>${bloom}g</b> of water in a tight spiral from the center outward, fully saturating the grounds. Wait ${bloomTime} — the <b>lava ribs</b> will activate the coffee bed during this phase.`,
+        `At 0:45, pour in slow concentric circles up to <b>${Math.round(water*0.55)}g</b>. The aluminum core's thermal mass now sustains the bed temperature; the <b>air pockets</b> recapture rising steam to keep extraction stable.`,
+        `At 1:30, pour the remaining water to reach <b>${water}g</b> total in a single steady stream. Finish with a very gentle swirl to flatten the bed against the conical walls.`,
+        `Let it draw down fully. Target total brew time: <b>3:00 – 3:30</b>. The GC01's medium-slow flow combined with the aluminum's heat retention should yield an articulate, sweet cup. Pour into your Cupcano and <i>brew the moment</i>.`
       ];
     }
     if (method === 'hario-suiren') {
@@ -1346,6 +1358,10 @@
           <div class="spec-item"><div class="spec-label">${k}</div><div class="spec-value">${v}</div></div>
         `).join('')}</div>` : '';
 
+    const featuresBlock = mi.features && mi.features.length
+      ? `<div class="mt-3 flex flex-wrap">${mi.features.map(f => `<span class="feature-chip">⚙ ${f}</span>`).join('')}</div>`
+      : '';
+
     const oreaBottomBlock = recipe.oreaBottom
       ? `<div class="bottom-card bottom-recommended">
            <h5>🎯 Recommended bottom: ${OREA_BOTTOMS[recipe.oreaBottom].name}</h5>
@@ -1376,7 +1392,6 @@
           <p class="text-[11px] mb-2" style="color: var(--coffee-muted)">
             Identified from name: ${sourceLine.join(' · ')}
           </p>
-
           <div class="tasting-grid">
             <div class="tasting-item">
               <div class="t-icon">🌸</div>
@@ -1394,11 +1409,9 @@
               <div class="t-value">${fp.body || '—'}</div>
             </div>
           </div>
-
           <div class="flavor-wheel">
             ${fp.notes.slice(0, 6).map(n => `<span class="flavor-pill">● ${n}</span>`).join('')}
           </div>
-
           ${fp.desc ? `<div class="tasting-note">"${fp.desc}"</div>` : ''}
         </div>
       `;
@@ -1426,6 +1439,7 @@
         </div>
         <p class="text-sm leading-relaxed mt-2" style="color: var(--coffee)">${mi.desc}</p>
         ${specsBlock}
+        ${featuresBlock}
         ${oreaBottomBlock}
       </div>
 
@@ -1522,7 +1536,6 @@
     const brews = JSON.parse(localStorage.getItem('brewbook') || '[]');
     const brew = brews.find(b => b.id === brewId);
     if (!brew) return;
-
     const rating = brew.rating || 0;
     const notes = brew.notes || '';
 
