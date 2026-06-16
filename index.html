@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Brewbook — Craft Your Perfect Cup</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/fraunces@latest/latin-400-normal.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/fraunces@latest/latin-600-normal.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/latin-400-normal.css">
@@ -549,6 +550,167 @@
     margin-top: 0.35rem;
     border: 1px solid var(--stat-border);
   }
+
+  /* ============ EXPORT BUTTON & MENU ============ */
+  .export-wrap {
+    position: relative;
+    display: inline-block;
+  }
+  .export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    background: var(--input-bg);
+    color: var(--coffee);
+    border: 1.5px solid var(--card-border);
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.02em;
+  }
+  .export-btn:hover {
+    border-color: var(--amber);
+    color: var(--rust);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(42, 24, 16, 0.08);
+  }
+  .export-btn svg.chevron {
+    transition: transform 0.2s ease;
+  }
+  .export-btn.open svg.chevron {
+    transform: rotate(180deg);
+  }
+  .export-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 240px;
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 0.4rem;
+    box-shadow: 0 12px 40px rgba(42, 24, 16, 0.18);
+    z-index: 40;
+    animation: menuPop 0.18s ease-out;
+  }
+  .dark .export-menu { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); }
+  @keyframes menuPop {
+    from { opacity: 0; transform: translateY(-4px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .export-menu .menu-group-label {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--coffee-muted);
+    font-weight: 700;
+    padding: 0.55rem 0.7rem 0.25rem;
+  }
+  .export-menu button {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.55rem 0.7rem;
+    background: transparent;
+    border: none;
+    color: var(--espresso);
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s ease;
+  }
+  .export-menu button:hover {
+    background: var(--chip-bg);
+    color: var(--rust);
+  }
+  .export-menu button .menu-icon {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    background: var(--stat-bg-1);
+    border: 1px solid var(--stat-border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    color: var(--coffee);
+  }
+  .export-menu button:hover .menu-icon {
+    background: var(--chip-bg);
+    color: var(--rust);
+  }
+  .export-menu button .menu-text {
+    display: flex; flex-direction: column;
+    min-width: 0;
+  }
+  .export-menu button .menu-text .label {
+    font-weight: 600;
+    font-size: 0.82rem;
+    line-height: 1.2;
+  }
+  .export-menu button .menu-text .desc {
+    font-size: 0.68rem;
+    color: var(--coffee-muted);
+    font-weight: 400;
+    margin-top: 0.1rem;
+    line-height: 1.3;
+  }
+  .export-menu .divider {
+    height: 1px;
+    background: var(--card-border);
+    margin: 0.35rem 0.5rem;
+  }
+  .export-menu button.success .menu-icon {
+    background: rgba(34,197,94,0.18);
+    color: #16a34a;
+    border-color: rgba(34,197,94,0.3);
+  }
+  .dark .export-menu button.success .menu-icon {
+    background: rgba(74,222,128,0.18);
+    color: #4ade80;
+    border-color: rgba(74,222,128,0.3);
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--espresso);
+    color: var(--bg);
+    padding: 0.7rem 1.2rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    box-shadow: 0 10px 30px rgba(42, 24, 16, 0.25);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: toastIn 0.3s ease-out;
+  }
+  .dark .toast {
+    background: #e0a854;
+    color: #16100a;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+  .toast.hiding {
+    animation: toastOut 0.3s ease-in forwards;
+  }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translate(-50%, 16px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+  @keyframes toastOut {
+    from { opacity: 1; transform: translate(-50%, 0); }
+    to { opacity: 0; transform: translate(-50%, 16px); }
+  }
+  .toast svg { flex-shrink: 0; }
 </style>
 </head>
 <body class="relative">
@@ -583,12 +745,12 @@
 
   <section class="grid md:grid-cols-5 gap-8 items-center mb-14">
     <div class="md:col-span-3">
-      <span class="method-chip mb-4 inline-block">Recipe Generator · v4.2</span>
+      <span class="method-chip mb-4 inline-block">Recipe Generator · v4.3</span>
       <h2 class="text-5xl md:text-6xl font-semibold leading-[1.05] mb-5" style="color: var(--espresso)">
         Tell me about your <em class="not-italic" style="color: var(--amber)">coffee</em>,<br/>I'll craft the brew.
       </h2>
       <p class="text-lg max-w-xl leading-relaxed" style="color: var(--coffee)">
-        Type your bean's name and our engine identifies its origin, variety, and typical flavor profile. Then pick your brewer — including the Graycano — or let us recommend, and get the exact grind setting, ratio, and water temperature.
+        Type your bean's name and our engine identifies its origin, variety, and typical flavor profile. Then pick your brewer or let us recommend, and get the exact grind setting, ratio, and water temperature. Export your recipe as Markdown, JSON, or PDF.
       </p>
     </div>
     <div class="md:col-span-2">
@@ -716,7 +878,7 @@
           </svg>
         </div>
         <h3 class="text-2xl font-semibold mb-2" style="color: var(--espresso)">Your recipe will appear here</h3>
-        <p class="text-sm max-w-xs mx-auto" style="color: var(--coffee-muted)">Fill in the bean details and our engine will generate a custom brew recipe with expected flavor profile tailored to your coffee.</p>
+        <p class="text-sm max-w-xs mx-auto" style="color: var(--coffee-muted)">Fill in the bean details and our engine will generate a custom brew recipe. Then export it as Markdown, JSON, or PDF.</p>
       </div>
 
       <div id="recipeContent" class="hidden w-full fade-in"></div>
@@ -744,6 +906,7 @@
 </div>
 
 <div id="popoverRoot"></div>
+<div id="toastRoot"></div>
 
 <script>
   // ============ THEME ============
@@ -855,8 +1018,8 @@
   };
 
   const COFFEE_FARM = {
-    'esmeralda':      { farm: 'Hacienda La Esmeralda', desc: 'Hacienda La Esmeralda in Panama is legendary for its Geisha lots — consistently among the world\'s most expensive and celebrated coffees.', aromas: ['jasmine','bergamot','tropical'], notes: ['jasmine','bergamot','mango','papaya','honey'], body: 'light, tea-like', acidity: 'delicate, floral-citric' },
-    'gesha village':  { farm: 'Gesha Village', desc: 'Gesha Village in Ethiopia\'s Bench Maji zone grows the original Geisha variety in its ancestral home.', aromas: ['jasmine','tropical fruit','bergamot'], notes: ['jasmine','mango','papaya','bergamot','honey'], body: 'light to medium, silky', acidity: 'delicate, floral-citric' },
+    'esmeralda':      { farm: 'Hacienda La Esmeralda', desc: 'Hacienda La Esmeralda in Panama is legendary for its Geisha lots.', aromas: ['jasmine','bergamot','tropical'], notes: ['jasmine','bergamot','mango','papaya','honey'], body: 'light, tea-like', acidity: 'delicate, floral-citric' },
+    'gesha village':  { farm: 'Gesha Village', desc: 'Gesha Village in Ethiopia\'s Bench Maji zone grows the original Geisha variety.', aromas: ['jasmine','tropical fruit','bergamot'], notes: ['jasmine','mango','papaya','bergamot','honey'], body: 'light to medium, silky', acidity: 'delicate, floral-citric' },
     'ninety plus':    { farm: 'Ninety Plus', desc: 'Ninety Plus Gesha Estates produces some of the world\'s most exclusive coffees.', aromas: ['jasmine','tropical','berry'], notes: ['jasmine','tropical fruit','berry','honey','bergamot'], body: 'light to medium', acidity: 'delicate, complex' },
     'cerro azul':     { farm: 'Cerro Azul', desc: 'Cerro Azul in Colombia\'s Valle del Cauca is known for exceptional Geisha and Pink Bourbon lots.', aromas: ['floral','tropical','stone fruit'], notes: ['jasmine','mango','peach','honey'], body: 'medium, silky', acidity: 'bright, citric' },
     'monteblanco':    { farm: 'Finca Monteblanco', desc: 'Finca Monteblanco in Huila, Colombia is famous for experimental processes and vibrant Pink Bourbon lots.', aromas: ['tropical','floral','stone fruit'], notes: ['tropical fruit','jasmine','peach','honey'], body: 'medium, juicy', acidity: 'bright' },
@@ -1070,7 +1233,6 @@
   }
 
   // ============ GRINDERS ============
-  // Timemore C3 ESP rotations from zero
   const GRINDER_C3_ESP = {
     name: 'Timemore C3 ESP', unit: 'rotations from zero', unitShort: 'rot.',
     v60:          { light: '1.2.2', lightMedium: '1.4', medium: '1.6', mediumDark: '1.8.2', dark: '2.0.2' },
@@ -1080,9 +1242,6 @@
     aeropress:    { light: '1.1',   lightMedium: '1.5', medium: '1.9', mediumDark: '2.4',   dark: '2.8.1' }
   };
 
-  // Timemore S3 ESP clicks from zero (90 total, each click = 0.015 mm)
-  // S3 ESP pour-over band: 50-80 clicks. Graycano uses medium-slow paper so we go
-  // slightly coarser than V60 to compensate for the slower flow.
   const GRINDER_S3_ESP = {
     name: 'Timemore S3 ESP', unit: 'clicks from zero', unitShort: 'clicks', totalClicks: 90,
     v60:          { light: 54, lightMedium: 60, medium: 66, mediumDark: 72, dark: 78 },
@@ -1122,7 +1281,6 @@
     if (isHoney)   { scores['hario-suiren'] += 3; scores['aeropress'] += 1; scores['graycano'] += 1; }
     if (isFunky)   { scores['aeropress'] += 3; scores['v60-switch'] += 1; }
 
-    // Graycano's aluminum thermal mass favors light and light-medium roasts
     if (roastLevel === 'light' || roastLevel === 'light-medium') {
       scores['orea-v4'] += 2; scores['v60-switch'] += 1; scores['graycano'] += 3;
     }
@@ -1149,8 +1307,6 @@
     const isNatural = process === 'natural';
     const isHoney = process === 'honey';
 
-    // Graycano's aluminum thermal retention favors slightly lower temps for light roasts
-    // to avoid over-extraction, but keeps high temps for medium+ roasts.
     const roastMap = {
       'light':        { temp: 96, grind: 'medium-fine',    label: 'Light',        roastKey: 'light' },
       'light-medium': { temp: 94, grind: 'medium-fine',    label: 'Light-Medium', roastKey: 'lightMedium' },
@@ -1172,8 +1328,6 @@
     else if (roastLevel === 'medium-dark') ratio = 15;
     else ratio = 14;
 
-    // Graycano: aluminum core retains heat aggressively, so drop temp by 1°C for light roasts
-    // to avoid over-extracting delicate florals. For dark roasts, keep temp (thermal mass helps).
     let temp = roastData.temp;
     if (bestMethod === 'graycano' && (roastLevel === 'light' || roastLevel === 'light-medium')) {
       temp -= 1;
@@ -1250,8 +1404,6 @@
       ];
     }
     if (method === 'graycano') {
-      // Graycano-specific recipe: preheat aluminum core, leverage lava ribs + air pockets
-      // Use a 4:6-style hybrid with the GC01 medium-slow paper
       return [
         `Heat water to <b>${temp}°C</b>. Place the GC01 conical filter in the Graycano and rinse with hot water. <b>Crucially, preheat the cast aluminum core</b> thoroughly — this is what unlocks the dripper's thermal magic. Discard rinse water from the Pourcano server.`,
         `Add <b>${dose}g</b> of ${grind} ground coffee. Give the dripper a gentle shake to level the bed along the conical walls.`,
@@ -1309,6 +1461,10 @@
   const btnText = document.getElementById('btnText');
   const btnLoader = document.getElementById('btnLoader');
 
+  // Store current recipe for export
+  let currentRecipe = null;
+  let currentData = null;
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     btn.disabled = true;
@@ -1328,12 +1484,407 @@
 
     setTimeout(() => {
       const recipe = generateRecipe(data);
+      currentRecipe = recipe;
+      currentData = data;
       renderRecipe(recipe, data);
       saveBrew(data, recipe);
       btn.disabled = false;
       btnText.textContent = 'Generate recipe';
       btnLoader.classList.add('hidden');
     }, 1100);
+  });
+
+  // ============================================================
+  // ============ EXPORT FUNCTIONS ==============================
+  // ============================================================
+
+  function buildMarkdown(recipe, data) {
+    const fp = recipe.flavorProfile;
+    const gi = recipe.grindInfo;
+    const mi = recipe.methodInfo;
+    const roastDateStr = new Date(data.roastDate).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+    const todayStr = today.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+    let md = `# ☕ ${data.coffeeName}\n`;
+    md += `*Brew recipe generated on ${todayStr}*\n\n`;
+    md += `---\n\n`;
+
+    // Brew Parameters
+    md += `## 🎯 Brew Parameters\n\n`;
+    md += `| Parameter | Value |\n`;
+    md += `|---|---|\n`;
+    md += `| **Method** | ${mi.name} |\n`;
+    md += `| **Dose** | ${recipe.dose}g |\n`;
+    md += `| **Water** | ${recipe.water}g |\n`;
+    md += `| **Ratio** | 1:${recipe.ratio} |\n`;
+    md += `| **Temperature** | ${recipe.temp}°C |\n`;
+    md += `| **Grind size** | ${gi.grindLabel} (${gi.microns}) |\n`;
+    md += `| **Grinder** | ${gi.grinderName} |\n`;
+    md += `| **Grinder setting** | ${gi.setting} ${gi.unit} |\n`;
+    if (recipe.oreaBottom) {
+      md += `| **Orea bottom** | ${OREA_BOTTOMS[recipe.oreaBottom].name} |\n`;
+    }
+    md += `\n`;
+
+    // Bean Details
+    md += `## 🌍 Bean Details\n\n`;
+    md += `- **Name:** ${data.coffeeName}\n`;
+    md += `- **Country:** ${data.country}\n`;
+    md += `- **Process:** ${recipe.processLabel}\n`;
+    md += `- **Altitude:** ${data.altitude} m.a.s.l. (${recipe.altTier})\n`;
+    md += `- **Roast level:** ${recipe.roastLabel}\n`;
+    md += `- **Roasted:** ${roastDateStr} (${recipe.daysSinceRoast} days ago)\n`;
+    if (recipe.freshnessNote) {
+      md += `- **Freshness:** ${recipe.freshnessNote}\n`;
+    }
+    md += `\n`;
+
+    // Expected Flavor Profile
+    if (fp) {
+      md += `## 🌸 Expected Flavor Profile\n\n`;
+      const sourceLine = [];
+      if (fp.matches.variety) sourceLine.push(`variety: ${fp.matches.variety}`);
+      if (fp.matches.farm) sourceLine.push(`farm: ${fp.matches.farm}`);
+      if (fp.matches.region) sourceLine.push(`region: ${fp.matches.region}`);
+      if (fp.matches.country) sourceLine.push(`origin: ${fp.matches.country}`);
+      md += `*Identified from name: ${sourceLine.join(' · ')}*\n\n`;
+      md += `| Attribute | Description |\n`;
+      md += `|---|---|\n`;
+      md += `| **Aromas** | ${fp.aromas.join(', ') || '—'} |\n`;
+      md += `| **Acidity** | ${fp.acidity || '—'} |\n`;
+      md += `| **Body** | ${fp.body || '—'} |\n`;
+      md += `| **Flavor notes** | ${fp.notes.join(', ')} |\n`;
+      md += `\n`;
+      if (fp.desc) {
+        md += `> ${fp.desc}\n\n`;
+      }
+    }
+
+    // Method Description
+    md += `## ${mi.icon} ${mi.name}\n\n`;
+    md += `**${mi.tagline}**\n\n`;
+    // Strip HTML from desc
+    md += `${mi.desc.replace(/<b>/g,'**').replace(/<\/b>/g,'**').replace(/<i>/g,'*').replace(/<\/i>/g,'*')}\n\n`;
+
+    // Steps
+    md += `## 📝 Step-by-Step Recipe\n\n`;
+    recipe.steps.forEach((step, i) => {
+      const cleanStep = step
+        .replace(/<b>/g,'**').replace(/<\/b>/g,'**')
+        .replace(/<i>/g,'*').replace(/<\/i>/g,'*');
+      md += `${i+1}. ${cleanStep}\n`;
+    });
+    md += `\n`;
+
+    // Footer
+    md += `---\n\n`;
+    md += `*Generated by **Brewbook** — Craft your perfect cup* ☕\n`;
+
+    return md;
+  }
+
+  function buildJSON(recipe, data) {
+    return JSON.stringify({
+      version: '1.0',
+      generatedAt: new Date().toISOString(),
+      generator: 'Brewbook Recipe Engine',
+      coffee: {
+        name: data.coffeeName,
+        country: data.country,
+        process: data.process,
+        processLabel: recipe.processLabel,
+        altitude: parseInt(data.altitude),
+        altitudeTier: recipe.altTier,
+        roastLevel: data.roastLevel,
+        roastLabel: recipe.roastLabel,
+        roastDate: data.roastDate,
+        daysSinceRoast: recipe.daysSinceRoast,
+        freshnessNote: recipe.freshnessNote || null
+      },
+      flavorProfile: recipe.flavorProfile ? {
+        identified: {
+          variety: recipe.flavorProfile.matches.variety,
+          farm: recipe.flavorProfile.matches.farm,
+          region: recipe.flavorProfile.matches.region,
+          origin: recipe.flavorProfile.matches.country
+        },
+        aromas: recipe.flavorProfile.aromas,
+        acidity: recipe.flavorProfile.acidity,
+        body: recipe.flavorProfile.body,
+        notes: recipe.flavorProfile.notes,
+        description: recipe.flavorProfile.desc
+      } : null,
+      recipe: {
+        method: recipe.method,
+        methodName: recipe.methodInfo.name,
+        methodTagline: recipe.methodInfo.tagline,
+        methodCategory: recipe.methodInfo.category,
+        recommendedMethod: recipe.recommendedMethod,
+        userOverrode: recipe.userOverrode,
+        dose: recipe.dose,
+        water: recipe.water,
+        ratio: recipe.ratio,
+        temperature: recipe.temp,
+        grind: {
+          label: recipe.grindInfo.grindLabel,
+          microns: recipe.grindInfo.microns
+        },
+        grinder: {
+          name: recipe.grindInfo.grinderName,
+          setting: recipe.grindInfo.setting,
+          unit: recipe.grindInfo.unit
+        },
+        oreaBottom: recipe.oreaBottom ? {
+          key: recipe.oreaBottom,
+          name: OREA_BOTTOMS[recipe.oreaBottom].name
+        } : null,
+        steps: recipe.steps.map((s, i) => ({
+          step: i + 1,
+          instruction: s.replace(/<[^>]+>/g, '')
+        }))
+      }
+    }, null, 2);
+  }
+
+  function sanitizeFilename(str) {
+    return str.replace(/[^a-zA-Z0-9\s\-]/g, '').replace(/\s+/g, '-').toLowerCase().slice(0, 60);
+  }
+
+  function downloadFile(filename, content, mime) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  async function copyToClipboard(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (e) {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.top = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    }
+  }
+
+  function showToast(message, icon = 'check') {
+    const root = document.getElementById('toastRoot');
+    const icons = {
+      check: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>`,
+      copy: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`,
+      pdf: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
+      error: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
+    };
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `${icons[icon] || icons.check}<span>${message}</span>`;
+    root.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('hiding');
+      setTimeout(() => toast.remove(), 300);
+    }, 2400);
+  }
+
+  async function exportRecipe(format, btnEl) {
+    if (!currentRecipe || !currentData) {
+      showToast('Generate a recipe first', 'error');
+      return;
+    }
+    const base = sanitizeFilename(`${currentData.coffeeName}-recipe`);
+
+    const originalIcon = btnEl.querySelector('.menu-icon').innerHTML;
+    const setSuccess = () => {
+      btnEl.classList.add('success');
+      btnEl.querySelector('.menu-icon').innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>`;
+      setTimeout(() => {
+        btnEl.classList.remove('success');
+        btnEl.querySelector('.menu-icon').innerHTML = originalIcon;
+      }, 1500);
+    };
+
+    try {
+      if (format === 'copy-md') {
+        const md = buildMarkdown(currentRecipe, currentData);
+        const ok = await copyToClipboard(md);
+        if (ok) {
+          showToast('Markdown copied to clipboard', 'copy');
+          setSuccess();
+        } else {
+          showToast('Could not copy to clipboard', 'error');
+        }
+      }
+      else if (format === 'copy-json') {
+        const json = buildJSON(currentRecipe, currentData);
+        const ok = await copyToClipboard(json);
+        if (ok) {
+          showToast('JSON copied to clipboard', 'copy');
+          setSuccess();
+        } else {
+          showToast('Could not copy to clipboard', 'error');
+        }
+      }
+      else if (format === 'download-md') {
+        const md = buildMarkdown(currentRecipe, currentData);
+        downloadFile(`${base}.md`, md, 'text/markdown;charset=utf-8');
+        showToast('Markdown file downloaded', 'pdf');
+        setSuccess();
+      }
+      else if (format === 'download-json') {
+        const json = buildJSON(currentRecipe, currentData);
+        downloadFile(`${base}.json`, json, 'application/json;charset=utf-8');
+        showToast('JSON file downloaded', 'pdf');
+        setSuccess();
+      }
+      else if (format === 'download-pdf') {
+        showToast('Generating PDF...', 'pdf');
+        const content = document.getElementById('recipeContent');
+        // Temporarily force light background for PDF clarity
+        const wasDark = document.documentElement.classList.contains('dark');
+        if (wasDark) document.documentElement.classList.remove('dark');
+        const opt = {
+          margin: [10, 10, 10, 10],
+          filename: `${base}.pdf`,
+          image: { type: 'jpeg', quality: 0.95 },
+          html2canvas: { scale: 2, useCORS: true, backgroundColor: '#f5efe6' },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        };
+        await html2pdf().set(opt).from(content).save();
+        if (wasDark) document.documentElement.classList.add('dark');
+        showToast('PDF downloaded', 'pdf');
+        setSuccess();
+      }
+      closeExportMenu();
+    } catch (err) {
+      console.error(err);
+      showToast('Export failed: ' + err.message, 'error');
+    }
+  }
+
+  // ============ EXPORT MENU UI ============
+  let exportMenuOpen = false;
+  let activeExportBtn = null;
+  let activeExportMenu = null;
+
+  function openExportMenu(anchorBtn, recipeId) {
+    closeExportMenu();
+    anchorBtn.classList.add('open');
+    activeExportBtn = anchorBtn;
+
+    const menu = document.createElement('div');
+    menu.className = 'export-menu';
+    menu.innerHTML = `
+      <div class="menu-group-label">Copy to clipboard</div>
+      <button data-format="copy-md">
+        <div class="menu-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+          </svg>
+        </div>
+        <div class="menu-text">
+          <span class="label">Copy as Markdown</span>
+          <span class="desc">Readable, paste into notes or AI</span>
+        </div>
+      </button>
+      <button data-format="copy-json">
+        <div class="menu-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+          </svg>
+        </div>
+        <div class="menu-text">
+          <span class="label">Copy as JSON</span>
+          <span class="desc">Structured data for AI processing</span>
+        </div>
+      </button>
+      <div class="divider"></div>
+      <div class="menu-group-label">Download file</div>
+      <button data-format="download-md">
+        <div class="menu-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </div>
+        <div class="menu-text">
+          <span class="label">Download .md</span>
+          <span class="desc">Markdown file</span>
+        </div>
+      </button>
+      <button data-format="download-json">
+        <div class="menu-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </div>
+        <div class="menu-text">
+          <span class="label">Download .json</span>
+          <span class="desc">Structured data file</span>
+        </div>
+      </button>
+      <button data-format="download-pdf">
+        <div class="menu-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </div>
+        <div class="menu-text">
+          <span class="label">Download PDF</span>
+          <span class="desc">Print-ready formatted document</span>
+        </div>
+      </button>
+    `;
+
+    // Position relative to anchor
+    const wrap = anchorBtn.closest('.export-wrap');
+    wrap.appendChild(menu);
+    activeExportMenu = menu;
+    exportMenuOpen = true;
+
+    menu.querySelectorAll('button').forEach(b => {
+      b.addEventListener('click', (e) => {
+        e.stopPropagation();
+        exportRecipe(b.dataset.format, b);
+      });
+    });
+  }
+
+  function closeExportMenu() {
+    if (activeExportBtn) activeExportBtn.classList.remove('open');
+    if (activeExportMenu) activeExportMenu.remove();
+    activeExportBtn = null;
+    activeExportMenu = null;
+    exportMenuOpen = false;
+  }
+
+  document.addEventListener('click', (e) => {
+    if (exportMenuOpen && !e.target.closest('.export-wrap')) {
+      closeExportMenu();
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && exportMenuOpen) closeExportMenu();
   });
 
   function renderRecipe(recipe, data) {
@@ -1418,9 +1969,24 @@
     }
 
     content.innerHTML = `
-      <div class="flex items-center gap-2 mb-6">
-        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-semibold" style="background: var(--espresso); color: var(--bg)">2</div>
-        <h3 class="text-xl font-semibold" style="color: var(--espresso)">Your custom recipe</h3>
+      <div class="flex items-center justify-between gap-2 mb-6 flex-wrap">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-semibold" style="background: var(--espresso); color: var(--bg)">2</div>
+          <h3 class="text-xl font-semibold" style="color: var(--espresso)">Your custom recipe</h3>
+        </div>
+        <div class="export-wrap">
+          <button type="button" class="export-btn" id="exportBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <span>Export</span>
+            <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+        </div>
       </div>
 
       ${overrideNote}
@@ -1513,6 +2079,17 @@
         </div>
       </div>
     `;
+
+    // Attach export menu handler
+    const exportBtn = document.getElementById('exportBtn');
+    exportBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (exportMenuOpen && activeExportBtn === exportBtn) {
+        closeExportMenu();
+      } else {
+        openExportMenu(exportBtn);
+      }
+    });
   }
 
   function starSVG() {
@@ -1711,7 +2288,11 @@
         if (e.target.closest('.notes-btn')) return;
         const id = parseInt(el.dataset.id);
         const brew = brews.find(b => b.id === id);
-        if (brew) renderRecipe(brew.recipe, brew.data);
+        if (brew) {
+          currentRecipe = brew.recipe;
+          currentData = brew.data;
+          renderRecipe(brew.recipe, brew.data);
+        }
         window.scrollTo({ top: document.getElementById('recipeCard').offsetTop - 20, behavior: 'smooth' });
       });
     });
@@ -1740,7 +2321,10 @@
     }
   });
 
-  window.addEventListener('resize', closePopover);
+  window.addEventListener('resize', () => {
+    closePopover();
+    closeExportMenu();
+  });
 
   renderBrewList();
 </script>
